@@ -1,1 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Deadline of Doom — 2027 MA Bid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative:wght@400&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --fire-deep:   #1A0800;
+      --gold-ring:   #C8860A;
+      --gold-bright: #F0A623;
+      --gold-pale:   #F5D87A;
+      --ash:         #C9BBA8;
+      --ash-dim:     rgba(201,187,168,0.55);
+      --lava:        #E8400A;
+      --white:       #F5EFE0;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background-color: var(--fire-deep);
+      color: var(--white);
+      font-family: 'IM Fell English', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem 1rem 3rem;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 60% at 50% 110%, rgba(180,40,0,0.6) 0%, transparent 65%),
+        radial-gradient(ellipse 80% 40% at 20% 100%, rgba(120,20,0,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 40% at 80% 100%, rgba(150,30,0,0.3) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.2rem;
+    }
+
+    .elvish-top {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 12px;
+      color: var(--gold-ring);
+      letter-spacing: 0.2em;
+      text-align: center;
+      opacity: 0.8;
+      animation: fadeDown 1.2s ease both;
+    }
+
+    .ring-wrap { animation: fadeDown 1s 0.1s ease both; }
+
+    @keyframes ringGlow {
+      0%, 100% { filter: drop-shadow(0 0 14px rgba(200,134,10,0.5)) drop-shadow(0 0 36px rgba(200,134,10,0.2)); }
+      50%       { filter: drop-shadow(0 0 28px rgba(240,166,35,0.8)) drop-shadow(0 0 64px rgba(240,166,35,0.4)); }
+    }
+    .ring-svg { display: block; animation: ringGlow 3s ease-in-out infinite; }
+
+    .header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+
+    .eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-ring);
+      border: 1px solid rgba(200,134,10,0.3);
+      padding: 5px 14px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(24px, 5vw, 44px);
+      font-weight: 600;
+      color: var(--gold-pale);
+      line-height: 1.2;
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 30px rgba(200,134,10,0.5);
+    }
+
+    .subtitle {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(13px, 2vw, 16px);
+      color: var(--ash-dim);
+      letter-spacing: 0.04em;
+    }
+
+    .deadline-stamp {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--gold-ring);
+      letter-spacing: 0.1em;
+    }
+
+    .rule {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .rule-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(200,134,10,0.5), transparent); }
+    .rule-diamond { width: 6px; height: 6px; background: var(--gold-ring); transform: rotate(45deg); flex-shrink: 0; }
+
+    .units {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 0 2.2rem;
+      border-right: 1px solid rgba(200,134,10,0.12);
+    }
+    .unit:last-child { border-right: none; }
+
+    .unit-value {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(54px, 8.5vw, 92px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--gold-pale);
+      text-shadow: 0 0 20px rgba(240,166,35,0.35);
+      min-width: 2ch;
+      text-align: center;
+      transition: color 0.4s, text-shadow 0.4s;
+    }
+    .unit-value.urgent {
+      color: var(--lava);
+      text-shadow: 0 0 24px rgba(232,64,10,0.7);
+    }
+
+    .unit-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-ring);
+    }
+
+    .ring-inscription {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(12px, 2vw, 15px);
+      color: var(--gold-ring);
+      text-align: center;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      opacity: 0.75;
+      padding: 0 1.5rem;
+      animation: fadeUp 1s 0.4s ease both;
+      transition: opacity 0.4s ease;
+      min-height: 2em;
+    }
+
+    /* ── Journey tracker ── */
+    .progress-section {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeUp 1s 0.5s ease both;
+    }
+
+    .progress-meta-center {
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(201,187,168,0.32);
+      letter-spacing: 0.06em;
+    }
+
+    /* Row: Shire | track+characters | Doom */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .landmark {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .landmark-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-ring);
+      opacity: 0.85;
+      white-space: nowrap;
+      margin-bottom: 1px;
+    }
+
+    .landmark-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 7px;
+      letter-spacing: 0.1em;
+      color: rgba(201,187,168,0.5);
+      white-space: nowrap;
+      margin-bottom: 4px;
+    }
+
+    /* Extra top padding so the characters (which float above) don't get clipped */
+    .progress-track-wrap {
+      flex: 1;
+      padding-top: 90px;
+      position: relative;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      position: relative;
+      overflow: visible;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gold-ring);
+      transition: width 1s linear, background 0.5s ease;
+    }
+
+    /* Each char-pin is absolutely positioned within progress-track-wrap.
+       bottom:4px sits it on top of the 4px track bar.
+       transform:translateX(-50%) centers it on its left anchor. */
+    .char-pin {
+      position: absolute;
+      bottom: 4px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      transition: left 1s linear;
+    }
+
+    .char-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--gold-ring);
+      opacity: 0.7;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    @keyframes hobbitBob {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-2px); }
+    }
+    @keyframes gollumCreep {
+      0%,100% { transform: translateY(0px); }
+      30%      { transform: translateY(-3px); }
+      70%      { transform: translateY(1px); }
+    }
+
+    /* status */
+    .status-block {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeUp 1s 0.6s ease both;
+    }
+    .status-flavor {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(14px, 2.2vw, 17px);
+      color: var(--ash);
+      line-height: 1.6;
+      min-height: 1.6em;
+    }
+    .status-plain {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--ash-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .footer {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(201,187,168,0.22);
+      text-align: center;
+      letter-spacing: 0.07em;
+      animation: fadeUp 1s 0.7s ease both;
+    }
+
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes secondPulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    #seconds { animation: secondPulse 1s ease-in-out infinite; }
+
+    @media (max-width: 580px) {
+      .unit { padding: 0 1.2rem; }
+      .unit-value { font-size: 42px; }
+    }
+    @media (max-width: 380px) {
+      .unit { padding: 0 0.7rem; }
+      .unit-value { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAZGÛL — fixed to right side, swooping low across the page ── -->
+<svg id="nazgul" aria-label="A Nazgul circles overhead" xmlns="http://www.w3.org/2000/svg"
+     style="position:fixed; top:0; right:0; width:420px; height:100vh; pointer-events:none; z-index:10; overflow:visible;">
+  <defs>
+    <!-- Flight path: starts top-right, swoops down to mid/lower page, loops back up -->
+    <path id="flightPath"
+          d="M 380,40
+             C 420,10  440,80  400,150
+             C 370,210 300,240 260,300
+             C 220,360 230,440 270,480
+             C 310,520 380,500 400,440
+             C 420,380 390,310 360,260
+             C 330,210 300,170 320,110
+             C 340,60  370,70  380,40 Z"/>
+  </defs>
+
+  <g id="nazgul-flier">
+    <!-- ── FELL BEAST body ── -->
+    <ellipse cx="0" cy="0" rx="18" ry="7" fill="#1A1008"/>
+    <path d="M14,0 Q22,-5 28,-8" fill="none" stroke="#1A1008" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="30" cy="-10" rx="8" ry="4.5" fill="#221408" transform="rotate(-15 30 -10)"/>
+    <path d="M26,-7 Q32,-4 34,-6" fill="none" stroke="#221408" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="33" cy="-12" r="1.2" fill="#FF4400" opacity="0.9"/>
+    <path d="M-16,0 Q-24,4 -28,10 Q-30,14 -26,15" fill="none" stroke="#1A1008" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- left wing -->
+    <path d="M0,-4 C -8,-20 -30,-28 -44,-20 C -36,-14 -20,-10 -12,-4 Z" fill="#120C04"/>
+    <line x1="0" y1="-4" x2="-40" y2="-22" stroke="#0A0804" stroke-width="0.8" opacity="0.7"/>
+    <line x1="-4" y1="-5" x2="-30" y2="-26" stroke="#0A0804" stroke-width="0.7" opacity="0.6"/>
+    <line x1="-8" y1="-5" x2="-20" y2="-22" stroke="#0A0804" stroke-width="0.7" opacity="0.5"/>
+    <!-- right wing -->
+    <path d="M0,4 C -8,20 -30,28 -44,20 C -36,14 -20,10 -12,4 Z" fill="#120C04"/>
+    <line x1="0" y1="4" x2="-40" y2="22" stroke="#0A0804" stroke-width="0.8" opacity="0.7"/>
+    <line x1="-4" y1="5" x2="-30" y2="26" stroke="#0A0804" stroke-width="0.7" opacity="0.6"/>
+    <line x1="-8" y1="5" x2="-20" y2="22" stroke="#0A0804" stroke-width="0.7" opacity="0.5"/>
+
+    <!-- ══ WITCH-KING RIDER ══ -->
+    <!-- Cloak — wide, billowing layers behind him -->
+    <path d="M-2,0 Q-10,10 -16,18 Q-8,20 -4,14 Q0,20 4,14 Q8,20 14,16 Q10,8 6,2Z"
+          fill="#0D0A06" opacity="0.95"/>
+    <!-- Cloak secondary layer (darker inner folds) -->
+    <path d="M0,2 Q-6,10 -10,16 Q-4,17 0,12 Q4,17 8,14 Q4,8 0,2Z"
+          fill="#080604" opacity="0.9"/>
+
+    <!-- Armored torso — layered dark plates -->
+    <ellipse cx="4" cy="-4" rx="5.5" ry="6.5" fill="#181410"/>
+    <!-- chest plate highlight (subtle edge light) -->
+    <path d="M0,-9 Q4,-11 8,-9 Q7,-5 4,-4 Q1,-5 0,-9Z" fill="#2A2418" opacity="0.7"/>
+    <!-- scale/plate texture lines on torso -->
+    <path d="M1,-9 Q4,-10 7,-9" fill="none" stroke="#2A2010" stroke-width="0.6" opacity="0.8"/>
+    <path d="M0,-7 Q4,-8 8,-7" fill="none" stroke="#2A2010" stroke-width="0.6" opacity="0.7"/>
+    <path d="M0,-5 Q4,-6 8,-5" fill="none" stroke="#2A2010" stroke-width="0.6" opacity="0.6"/>
+
+    <!-- Left gauntlet arm — gripping the reins -->
+    <path d="M0,-4 Q-5,-2 -8,1" fill="none" stroke="#201A0E" stroke-width="3" stroke-linecap="round"/>
+    <!-- gauntlet fingers left -->
+    <path d="M-8,1 Q-10,0 -11,2" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M-8,1 Q-10,1.5 -10,3.5" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M-8,1 Q-9,3 -8,4.5" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Right gauntlet arm — raised slightly -->
+    <path d="M8,-4 Q12,-6 14,-4" fill="none" stroke="#201A0E" stroke-width="3" stroke-linecap="round"/>
+    <!-- gauntlet fingers right -->
+    <path d="M14,-4 Q16,-5 17,-3" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M14,-4 Q16,-3.5 16,-1.5" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M14,-4 Q15,-2 14,-0.5" fill="none" stroke="#201A0E" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Neck / gorget -->
+    <rect x="2" y="-11" width="5" height="3" rx="1" fill="#161210"/>
+
+    <!-- ── FACE — pure void, no mask, just darkness with ember glow ── -->
+    <!-- dark hollow beneath crown - the abyss where a face should be -->
+    <ellipse cx="4" cy="-16" rx="6" ry="7" fill="#080604"/>
+    <!-- deep shadow inner void -->
+    <ellipse cx="4" cy="-16" rx="4.5" ry="5.5" fill="#050402"/>
+    <!-- faint hellish ember glow deep inside — two eye positions -->
+    <ellipse cx="1.5" cy="-17" rx="1.8" ry="1" fill="#CC3300" opacity="0.35"/>
+    <ellipse cx="6.5" cy="-17" rx="1.8" ry="1" fill="#CC3300" opacity="0.35"/>
+    <!-- very faint orange centre glow suggesting fire within -->
+    <ellipse cx="4" cy="-16" rx="3" ry="2" fill="#FF5500" opacity="0.1"/>
+
+    <!-- ── CROWN — tall ragged iron crown, tattered and organic ── -->
+    <!-- crown base band — darker, rougher -->
+    <path d="M-2,-21 Q4,-23 10,-21 Q9,-20 4,-19.5 Q-1,-20 -2,-21Z" fill="#1A1610"/>
+    <!-- left outer ragged spike -->
+    <path d="M-2,-21 Q-3,-24 -2,-28 Q-1,-24 0,-21Z" fill="#141008"/>
+    <!-- left spike -->
+    <path d="M0.5,-21 Q0,-25 1,-31 Q2,-25 2.5,-21Z" fill="#181410"/>
+    <!-- tall central spike — dominant, slightly bent -->
+    <path d="M3,-21 Q2.5,-27 4,-36 Q5.5,-27 5,-21Z" fill="#1E1A12"/>
+    <!-- slight curve on central spike -->
+    <path d="M4,-36 Q5,-32 5,-28" fill="none" stroke="#2A2418" stroke-width="0.6" opacity="0.5"/>
+    <!-- right spike -->
+    <path d="M5.5,-21 Q6,-25 7,-31 Q7.5,-25 8,-21Z" fill="#181410"/>
+    <!-- right outer ragged spike -->
+    <path d="M8,-21 Q9,-24 10,-28 Q10,-24 11,-21Z" fill="#141008"/>
+    <!-- small broken/jagged fragments between spikes -->
+    <path d="M1.5,-21 Q1,-23 1.5,-24 Q2,-23 2,-21Z" fill="#0E0C08" opacity="0.8"/>
+    <path d="M6,-21 Q6.5,-22.5 7,-23 Q7,-22 7.5,-21Z" fill="#0E0C08" opacity="0.8"/>
+    <!-- crown edge wear marks -->
+    <path d="M-2,-21 Q4,-22 10,-21" fill="none" stroke="#302A1A" stroke-width="0.5" opacity="0.6"/>
+
+    <!-- shadow cast down -->
+    <ellipse cx="-8" cy="18" rx="22" ry="4" fill="rgba(0,0,0,0.18)"/>
+  </g>
+
+  <animateMotion
+    xlink:href="#nazgul-flier"
+    dur="12s"
+    repeatCount="indefinite"
+    rotate="auto">
+    <mpath xlink:href="#flightPath"/>
+  </animateMotion>
+
+  <animateTransform
+    xlink:href="#nazgul-flier"
+    attributeName="transform"
+    type="scale"
+    values="1,1; 1,0.7; 1,1; 1,1.3; 1,1"
+    dur="1.1s"
+    repeatCount="indefinite"
+    additive="sum"/>
+</svg>
+
+<div class="container">
+
+  <p class="elvish-top">&#9670; &nbsp; One Deadline to Rule Them All &nbsp; &#9670;</p>
+
+  <div class="ring-wrap" aria-hidden="true">
+    <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="rg" cx="38%" cy="35%" r="65%">
+          <stop offset="0%"   stop-color="#F5D87A"/>
+          <stop offset="40%"  stop-color="#C8860A"/>
+          <stop offset="100%" stop-color="#6B3A00"/>
+        </radialGradient>
+      </defs>
+      <circle cx="55" cy="55" r="48" fill="none" stroke="url(#rg)" stroke-width="14"/>
+      <circle cx="55" cy="55" r="41" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="2"/>
+      <circle cx="55" cy="55" r="49" fill="none" stroke="rgba(245,216,122,0.12)" stroke-width="1"/>
+      <ellipse cx="38" cy="28" rx="6" ry="3" fill="rgba(255,240,180,0.3)" transform="rotate(-30 38 28)"/>
+    </svg>
+  </div>
+
+  <div class="header">
+    <span class="eyebrow">CMS Plan Bid Submission · 2027</span>
+    <h1>The Deadline of Doom</h1>
+    <p class="subtitle">Medicare Advantage &amp; Part D — Plan Year 2027</p>
+    <p class="deadline-stamp">June 1, 2026 &nbsp;·&nbsp; 11:59:59 PM PDT</p>
+  </div>
+
+  <div class="rule"><div class="rule-line"></div><div class="rule-diamond"></div><div class="rule-line"></div></div>
+
+  <div class="units" aria-live="polite" aria-label="Countdown timer">
+    <div class="unit">
+      <span class="unit-value" id="days">--</span>
+      <span class="unit-label">Days</span>
+    </div>
+    <div class="unit">
+      <span class="unit-value" id="hours">--</span>
+      <span class="unit-label">Hours</span>
+    </div>
+    <div class="unit">
+      <span class="unit-value" id="minutes">--</span>
+      <span class="unit-label">Mins</span>
+    </div>
+    <div class="unit">
+      <span class="unit-value" id="seconds">--</span>
+      <span class="unit-label">Secs</span>
+    </div>
+  </div>
+
+  <p class="ring-inscription" id="ring-inscription">
+    "Even the smallest actuary can change the course of the future."
+  </p>
+
+  <div class="progress-section">
+    <div class="progress-meta-center">
+      <span id="pct-label">The journey begins</span>
+    </div>
+    <div class="progress-row">
+
+      <!-- THE SHIRE -->
+      <div class="landmark landmark-shire" aria-label="The Shire">
+        <div class="landmark-label">The Shire</div>
+        <div class="landmark-date">Jan 1</div>
+        <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="hillGrad" cx="45%" cy="40%" r="60%">
+              <stop offset="0%"   stop-color="#4EA826"/>
+              <stop offset="60%"  stop-color="#2E7014"/>
+              <stop offset="100%" stop-color="#1A4A0A"/>
+            </radialGradient>
+            <radialGradient id="doorGlow" cx="38%" cy="32%" r="68%">
+              <stop offset="0%"   stop-color="#F0A820"/>
+              <stop offset="100%" stop-color="#B86808"/>
+            </radialGradient>
+          </defs>
+
+          <!-- ── MAIN HILL — organic blob flowing all the way down ── -->
+          <ellipse cx="40" cy="46" rx="40" ry="32" fill="#1A4A0A"/>
+          <path d="M0,72 Q2,60 6,52 Q10,40 14,36 Q20,28 28,24 Q36,20 44,21 Q56,22 64,30 Q70,36 74,46 Q78,56 80,68 L80,90 L0,90 Z"
+                fill="url(#hillGrad)"/>
+          <!-- lighter highlight on hill crest -->
+          <path d="M18,36 Q30,20 48,21 Q62,22 70,36 Q58,26 40,26 Q24,26 18,36Z" fill="#5EC030" opacity="0.45"/>
+          <!-- lumpy grass bumps along top edge -->
+          <ellipse cx="20" cy="30" rx="8"  ry="5"  fill="#4EA826" opacity="0.7"/>
+          <ellipse cx="36" cy="24" rx="10" ry="5"  fill="#5EC030" opacity="0.6"/>
+          <ellipse cx="54" cy="26" rx="9"  ry="5"  fill="#4EA826" opacity="0.65"/>
+          <ellipse cx="68" cy="34" rx="7"  ry="4"  fill="#3A8020" opacity="0.7"/>
+          <ellipse cx="8"  cy="44" rx="6"  ry="4"  fill="#3A8020" opacity="0.6"/>
+
+          <!-- ── EARTH FACADE — sandy soil recessed into hill ── -->
+          <path d="M20,72 Q20,44 40,44 Q60,44 60,72Z" fill="#C49040"/>
+          <path d="M22,72 Q22,46 40,46 Q58,46 58,72Z" fill="#B87A30" opacity="0.5"/>
+
+          <!-- ── WOOD LINTEL over entrance ── -->
+          <path d="M16,56 Q18,48 40,46 Q62,48 64,56" fill="none" stroke="#5A3010" stroke-width="4"   stroke-linecap="round"/>
+          <path d="M16,56 Q18,48 40,46 Q62,48 64,56" fill="none" stroke="#7A4A20" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- ── ROUND DOOR — warm amber, recessed ── -->
+          <circle cx="40" cy="60" r="13.5" fill="#2A1200"/>
+          <circle cx="40" cy="60" r="12"   fill="url(#doorGlow)"/>
+          <line x1="29"   y1="54" x2="51"   y2="54" stroke="#9A5808" stroke-width="0.9" opacity="0.7"/>
+          <line x1="28.2" y1="58" x2="51.8" y2="58" stroke="#9A5808" stroke-width="0.9" opacity="0.7"/>
+          <line x1="28.2" y1="62" x2="51.8" y2="62" stroke="#9A5808" stroke-width="0.9" opacity="0.7"/>
+          <line x1="29"   y1="66" x2="51"   y2="66" stroke="#9A5808" stroke-width="0.9" opacity="0.7"/>
+          <circle cx="40" cy="60" r="2.5" fill="#4A2800"/>
+          <circle cx="40" cy="60" r="1.8" fill="#7A4810"/>
+          <circle cx="39.3" cy="59.3" r="0.6" fill="rgba(255,210,100,0.55)"/>
+
+          <!-- ── LEFT ARCHED WINDOW ── -->
+          <path d="M12,66 Q12,54 21,54 Q30,54 30,66Z" fill="#7A3A18"/>
+          <path d="M13.5,66 Q13.5,55.5 21,55.5 Q28.5,55.5 28.5,66Z" fill="#1A1005"/>
+          <path d="M13.5,66 Q13.5,55.5 21,55.5 Q28.5,55.5 28.5,66Z" fill="rgba(255,150,30,0.28)"/>
+          <line x1="21" y1="55.5" x2="21" y2="66"   stroke="#7A4A20" stroke-width="0.9"/>
+          <line x1="13.5" y1="60.5" x2="28.5" y2="60.5" stroke="#7A4A20" stroke-width="0.9"/>
+          <rect x="12" y="66" width="18" height="2" rx="0.8" fill="#6A4A28"/>
+
+          <!-- ── GROUND ── -->
+          <rect x="0" y="72" width="80" height="18" rx="0" fill="#1C4A0C"/>
+          <ellipse cx="10" cy="72" rx="8" ry="3" fill="#2A6418"/>
+          <ellipse cx="68" cy="72" rx="8" ry="3" fill="#2A6418"/>
+          <ellipse cx="40" cy="72" rx="6" ry="2" fill="#2A6418"/>
+
+          <!-- ── GARDEN FLOWERS left ── -->
+          <ellipse cx="10" cy="74" rx="10" ry="4" fill="#1A3A08"/>
+          <line x1="5"  y1="74" x2="5"  y2="65" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="9"  y1="74" x2="8"  y2="63" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="13" y1="74" x2="14" y2="64" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="17" y1="74" x2="18" y2="66" stroke="#2A5A10" stroke-width="0.9"/>
+          <circle cx="5"  cy="64" r="2.2" fill="#F06080"/>
+          <circle cx="8"  cy="62" r="2"   fill="#F8C030"/>
+          <circle cx="14" cy="63" r="2.2" fill="#F88040"/>
+          <circle cx="18" cy="65" r="1.8" fill="#E8E0A0"/>
+          <circle cx="11" cy="61" r="1.8" fill="#F06080" opacity="0.8"/>
+          <ellipse cx="6"  cy="68" rx="2" ry="1" fill="#3A8020" transform="rotate(-30 6 68)"/>
+          <ellipse cx="15" cy="68" rx="2" ry="1" fill="#3A8020" transform="rotate(20 15 68)"/>
+
+          <!-- ── GARDEN FLOWERS right ── -->
+          <ellipse cx="66" cy="74" rx="12" ry="4" fill="#1A3A08"/>
+          <line x1="58" y1="74" x2="57" y2="65" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="63" y1="74" x2="62" y2="63" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="68" y1="74" x2="69" y2="64" stroke="#2A5A10" stroke-width="0.9"/>
+          <line x1="73" y1="74" x2="74" y2="66" stroke="#2A5A10" stroke-width="0.9"/>
+          <circle cx="57" cy="64" r="2.2" fill="#F8C030"/>
+          <circle cx="62" cy="62" r="2"   fill="#F88040"/>
+          <circle cx="69" cy="63" r="2.2" fill="#F06080"/>
+          <circle cx="74" cy="65" r="1.8" fill="#E040A0" opacity="0.85"/>
+          <circle cx="66" cy="61" r="1.8" fill="#F8C030" opacity="0.8"/>
+          <ellipse cx="60" cy="68" rx="2" ry="1" fill="#3A8020" transform="rotate(25 60 68)"/>
+          <ellipse cx="71" cy="67" rx="2" ry="1" fill="#3A8020" transform="rotate(-20 71 67)"/>
+
+          <!-- ── PICKET FENCE ── -->
+          <rect x="0"  y="77" width="80" height="1.5" rx="0.5" fill="#A89060"/>
+          <rect x="0"  y="82" width="80" height="1.5" rx="0.5" fill="#A89060"/>
+          <rect x="1"  y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="5"  y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="9"  y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="13" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="17" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="40" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="45" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="50" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="55" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="60" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="65" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="70" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+          <rect x="75" y="75" width="2.5" height="11" rx="1" fill="#C0A870"/>
+
+          <!-- stepping stone path -->
+          <ellipse cx="29" cy="80" rx="4"   ry="1.8" fill="#6A5A40" opacity="0.8"/>
+          <ellipse cx="34" cy="83" rx="3.5" ry="1.6" fill="#5A4A30" opacity="0.75"/>
+
+          <!-- ── CHIMNEY ── -->
+          <rect x="26" y="22" width="5" height="12" rx="1" fill="#5A3A18"/>
+          <rect x="24.5" y="21" width="8" height="2.5" rx="1" fill="#4A2A10"/>
+          <path d="M29,21 Q27,16 30,11 Q32,7 29,4" fill="none" stroke="rgba(201,187,168,0.38)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="progress-track-wrap">
+        <div class="progress-track" id="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width:0%;"></div>
+        </div>
+
+      <!-- Characters sit in the wrap, positioned absolutely by CSS left.
+           Each is a 50x60 SVG centered on its anchor point via margin-left:-25px.
+           JS sets style.left as a percentage + pixel offset for spacing. -->
+
+      <div class="char-pin" id="pin-gollum" aria-hidden="true">
+        <svg width="50" height="60" viewBox="-25 -55 50 60" xmlns="http://www.w3.org/2000/svg" style="animation: gollumCreep 0.7s ease-in-out infinite; overflow:visible;">
+          <!-- body -->
+          <ellipse cx="0" cy="0"   rx="4"   ry="5"   fill="#B8D4B8"/>
+          <!-- head -->
+          <circle  cx="0" cy="-9"  r="4.5"            fill="#C8DEC8"/>
+          <!-- huge eyes -->
+          <circle  cx="-1.8" cy="-9.8" r="1.6" fill="#88BBFF"/>
+          <circle  cx=" 1.8" cy="-9.8" r="1.6" fill="#88BBFF"/>
+          <circle  cx="-1.8" cy="-9.8" r="0.7" fill="#0A1A2E"/>
+          <circle  cx=" 1.8" cy="-9.8" r="0.7" fill="#0A1A2E"/>
+          <!-- arms reaching forward, grasping at nothing -->
+          <line x1="-4" y1="-3" x2="-10" y2="1"  stroke="#B8D4B8" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1=" 4" y1="-3" x2=" 10" y2="1"  stroke="#B8D4B8" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- grasping fingers on front arm -->
+          <line x1="-10" y1="1" x2="-12" y2="-1" stroke="#B8D4B8" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="-10" y1="1" x2="-12" y2="1.5" stroke="#B8D4B8" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="-10" y1="1" x2="-11" y2="3"   stroke="#B8D4B8" stroke-width="0.8" stroke-linecap="round"/>
+          <!-- legs -->
+          <line x1="-2" y1="4"  x2="-3"  y2="11" stroke="#B8D4B8" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1=" 2" y1="4"  x2=" 3"  y2="11" stroke="#B8D4B8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <div class="char-label">Gollum</div>
+      </div>
+
+      <div class="char-pin" id="pin-frodo" aria-hidden="true">
+        <svg width="50" height="60" viewBox="-25 -55 50 60" xmlns="http://www.w3.org/2000/svg" style="animation: hobbitBob 0.55s ease-in-out infinite; overflow:visible;">
+          <!-- cloak/body -->
+          <ellipse cx="0" cy="0"   rx="5"   ry="6.5" fill="#3B5A8A"/>
+          <!-- head -->
+          <circle  cx="0" cy="-10" r="5"             fill="#D4A574"/>
+          <!-- curly hair -->
+          <ellipse cx="0" cy="-13" rx="5"   ry="3.2" fill="#6B3A1F"/>
+          <!-- eyes -->
+          <circle  cx="-1.7" cy="-10" r="0.9" fill="#2A1A0E"/>
+          <circle  cx=" 1.7" cy="-10" r="0.9" fill="#2A1A0E"/>
+          <!-- hood -->
+          <ellipse cx="0" cy="-12" rx="5.5" ry="3.5" fill="#2E4A70" opacity="0.7"/>
+          <!-- right arm lowered -->
+          <line x1=" 5" y1="-2" x2=" 9" y2="3"  stroke="#3B5A8A" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- left arm raised, holding the Ring aloft -->
+          <line x1="-5" y1="-2" x2="-11" y2="-10" stroke="#3B5A8A" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- the One Ring held in raised hand — glowing gold -->
+          <circle cx="-13" cy="-12" r="3.2" fill="none" stroke="#F5D87A" stroke-width="1.6"/>
+          <circle cx="-13" cy="-12" r="3.2" fill="none" stroke="rgba(255,220,80,0.4)" stroke-width="3"/>
+          <!-- big hobbit feet -->
+          <ellipse cx="-3" cy="9" rx="4"   ry="1.8" fill="#6B4A2A"/>
+          <ellipse cx=" 3" cy="9" rx="4"   ry="1.8" fill="#6B4A2A"/>
+        </svg>
+        <div class="char-label">Frodo</div>
+      </div>
+
+      <div class="char-pin" id="pin-sam" aria-hidden="true">
+        <svg width="50" height="60" viewBox="-25 -55 50 60" xmlns="http://www.w3.org/2000/svg" style="animation: hobbitBob 0.55s 0.2s ease-in-out infinite; overflow:visible;">
+          <ellipse cx="0" cy="0"   rx="6.5" ry="7"   fill="#7A5C38"/>
+          <ellipse cx="6" cy="-3"  rx="3.5" ry="5"   fill="#4A2E10" opacity="0.9"/>
+          <circle  cx="0" cy="-11" r="5.2"            fill="#C89060"/>
+          <ellipse cx="0" cy="-14" rx="5.2" ry="3.3"  fill="#5A3318"/>
+          <circle  cx="-3.2" cy="-10.5" r="1.8" fill="#D4906A" opacity="0.45"/>
+          <circle  cx=" 3.2" cy="-10.5" r="1.8" fill="#D4906A" opacity="0.45"/>
+          <circle  cx="-1.8" cy="-11"  r="1"    fill="#2A1A0E"/>
+          <circle  cx=" 1.8" cy="-11"  r="1"    fill="#2A1A0E"/>
+          <path d="M-1.8,-8.5 Q0,-7 1.8,-8.5" fill="none" stroke="#8A5030" stroke-width="0.8"/>
+          <line x1="-6.5" y1="-2" x2="-11" y2="3"  stroke="#7A5C38" stroke-width="2"   stroke-linecap="round"/>
+          <line x1=" 6.5" y1="-2" x2=" 11" y2="3"  stroke="#7A5C38" stroke-width="2"   stroke-linecap="round"/>
+          <ellipse cx="-3.5" cy="10" rx="4.5" ry="2" fill="#5A3F22"/>
+          <ellipse cx=" 3.5" cy="10" rx="4.5" ry="2" fill="#5A3F22"/>
+        </svg>
+        <div class="char-label">Sam</div>
+      </div>
+
+      </div><!-- end progress-track-wrap -->
+
+      <!-- MOUNT DOOM -->
+      <div class="landmark landmark-doom" aria-label="Mount Doom">
+        <div class="landmark-label" style="color:#E8400A;">Mount Doom</div>
+        <div class="landmark-date">Jun 1</div>
+        <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <defs>
+            <radialGradient id="craterGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#FFD060" stop-opacity="1"/>
+              <stop offset="50%"  stop-color="#F06000" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#C83000" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="lavaPool" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#FFB040"/>
+              <stop offset="60%"  stop-color="#E04000"/>
+              <stop offset="100%" stop-color="#8B2A00"/>
+            </radialGradient>
+          </defs>
+
+          <!-- ambient glow behind mountain — pulses -->
+          <ellipse cx="36" cy="46" rx="30" ry="20" fill="rgba(180,40,0,0.18)">
+            <animate attributeName="rx" values="30;34;30" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.18;0.35;0.18" dur="3s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- mountain body -->
+          <polygon points="36,30 6,78 66,78" fill="#2C1A0A"/>
+          <polygon points="36,30 18,78 54,78" fill="#3D2010"/>
+
+          <!-- LEFT lava flow channel — animates downward -->
+          <path id="lava-left" d="M29,42 Q22,52 16,62 Q20,62 24,55 Q28,50 32,50Z" fill="url(#lavaPool)" opacity="0.8">
+            <animate attributeName="d"
+              values="M29,42 Q22,52 16,62 Q20,62 24,55 Q28,50 32,50Z;
+                      M29,44 Q21,54 15,64 Q19,64 23,57 Q27,52 31,51Z;
+                      M29,42 Q22,52 16,62 Q20,62 24,55 Q28,50 32,50Z"
+              dur="2.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;1;0.7;0.9;0.8" dur="2.2s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- RIGHT lava flow channel -->
+          <path d="M43,42 Q50,52 56,62 Q52,62 48,55 Q44,50 40,50Z" fill="url(#lavaPool)" opacity="0.8">
+            <animate attributeName="d"
+              values="M43,42 Q50,52 56,62 Q52,62 48,55 Q44,50 40,50Z;
+                      M43,44 Q51,54 57,64 Q53,64 49,57 Q45,52 41,51Z;
+                      M43,42 Q50,52 56,62 Q52,62 48,55 Q44,50 40,50Z"
+              dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.7;1;0.8" dur="2.6s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- crater rim -->
+          <ellipse cx="36" cy="32" rx="7" ry="4" fill="#C83000" opacity="0.9"/>
+          <ellipse cx="36" cy="31" rx="5" ry="2.5" fill="#F06000" opacity="0.85"/>
+
+          <!-- lava pool inside crater — bubbles via scale animation -->
+          <ellipse cx="36" cy="31" rx="4" ry="2" fill="url(#lavaPool)">
+            <animate attributeName="rx" values="4;5;3.5;4.5;4" dur="1.4s" repeatCount="indefinite"/>
+            <animate attributeName="ry" values="2;2.6;1.6;2.2;2" dur="1.4s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- bright molten core -->
+          <ellipse cx="36" cy="30.5" rx="3" ry="1.5" fill="#FFD060">
+            <animate attributeName="rx" values="3;3.8;2.5;3.2;3" dur="1.1s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.9;1;0.7;1;0.9" dur="1.1s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- crater glow halo — pulses brightly -->
+          <ellipse cx="36" cy="31" rx="9" ry="6" fill="url(#craterGlow)" opacity="0">
+            <animate attributeName="opacity" values="0;0.7;0.2;0.8;0" dur="1.8s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- lava bubble 1 -->
+          <circle cx="34" cy="30" r="1.2" fill="#FFB040" opacity="0">
+            <animate attributeName="cy"      values="31;28;26"    dur="1.2s" begin="0s"    repeatCount="indefinite"/>
+            <animate attributeName="r"       values="1.2;1.6;0"   dur="1.2s" begin="0s"    repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.9;0"     dur="1.2s" begin="0s"    repeatCount="indefinite"/>
+          </circle>
+          <!-- lava bubble 2 -->
+          <circle cx="38" cy="30" r="1" fill="#FF8020" opacity="0">
+            <animate attributeName="cy"      values="31;28;25"    dur="1.5s" begin="0.4s"  repeatCount="indefinite"/>
+            <animate attributeName="r"       values="1;1.4;0"     dur="1.5s" begin="0.4s"  repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.85;0"    dur="1.5s" begin="0.4s"  repeatCount="indefinite"/>
+          </circle>
+          <!-- lava bubble 3 -->
+          <circle cx="36" cy="31" r="0.8" fill="#FFD060" opacity="0">
+            <animate attributeName="cy"      values="31;29;26"    dur="0.9s" begin="0.8s"  repeatCount="indefinite"/>
+            <animate attributeName="r"       values="0.8;1.2;0"   dur="0.9s" begin="0.8s"  repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0"       dur="0.9s" begin="0.8s"  repeatCount="indefinite"/>
+          </circle>
+
+          <!-- embers / sparks popping up from crater -->
+          <circle cx="33" cy="29" r="0.7" fill="#FFB040" opacity="0">
+            <animate attributeName="cy"      values="30;22;16"    dur="1.8s" begin="0.2s"  repeatCount="indefinite"/>
+            <animate attributeName="cx"      values="33;31;29"    dur="1.8s" begin="0.2s"  repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.9;0"     dur="1.8s" begin="0.2s"  repeatCount="indefinite"/>
+          </circle>
+          <circle cx="39" cy="29" r="0.6" fill="#FF6020" opacity="0">
+            <animate attributeName="cy"      values="30;21;15"    dur="2.1s" begin="0.9s"  repeatCount="indefinite"/>
+            <animate attributeName="cx"      values="39;42;44"    dur="2.1s" begin="0.9s"  repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.8;0"     dur="2.1s" begin="0.9s"  repeatCount="indefinite"/>
+          </circle>
+          <circle cx="36" cy="28" r="0.5" fill="#FFD060" opacity="0">
+            <animate attributeName="cy"      values="29;20;13"    dur="1.5s" begin="1.4s"  repeatCount="indefinite"/>
+            <animate attributeName="cx"      values="36;34;32"    dur="1.5s" begin="1.4s"  repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0"       dur="1.5s" begin="1.4s"  repeatCount="indefinite"/>
+          </circle>
+
+          <!-- smoke puffs — rise and fade -->
+          <circle cx="34" cy="24" r="4.5" fill="rgba(60,20,0,0.5)">
+            <animate attributeName="cy"      values="24;18;12"    dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="r"       values="4.5;6;8"     dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0.3;0"   dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="39" cy="20" r="5" fill="rgba(50,15,0,0.45)">
+            <animate attributeName="cy"      values="20;14;8"     dur="4s" begin="1.3s" repeatCount="indefinite"/>
+            <animate attributeName="r"       values="5;7;9"       dur="4s" begin="1.3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.45;0.25;0" dur="4s" begin="1.3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="33" cy="16" r="4" fill="rgba(40,10,0,0.38)">
+            <animate attributeName="cy"      values="16;10;4"     dur="4s" begin="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="r"       values="4;6;8"       dur="4s" begin="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.38;0.2;0"  dur="4s" begin="2.6s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- base shadow -->
+          <ellipse cx="36" cy="78" rx="34" ry="5" fill="#1A0800" opacity="0.6"/>
+        </svg>
+      </div>
+
+    </div><!-- end progress-row -->
+  </div><!-- end progress-section -->
+
+  <div class="status-block">
+    <p class="status-flavor" id="status-flavor"></p>
+    <p class="status-plain"  id="status-plain"></p>
+  </div>
+
+  <div class="rule"><div class="rule-line"></div><div class="rule-diamond"></div><div class="rule-line"></div></div>
+
+  <p class="footer">All times in PDT (UTC&minus;7) &nbsp;&middot;&nbsp; CMS Plan Bid and Formulary Submission System &nbsp;&middot;&nbsp; You shall not miss this deadline.</p>
+
+</div>
+
+<svg id="shelob-svg" aria-label="Shelob the Great Spider builds her web" xmlns="http://www.w3.org/2000/svg"
+     style="position:fixed; bottom:0; right:0; width:280px; height:280px; pointer-events:none; z-index:10; overflow:visible;">
+  <g id="shelob-web"></g>
+  <g id="shelob-body" transform="translate(230, 230)">
+    <ellipse cx="0" cy="0" rx="22" ry="16" fill="#1A1208"/>
+    <ellipse cx="0" cy="-2" rx="10" ry="7" fill="#2A1E0A" opacity="0.7"/>
+    <ellipse cx="0" cy="2"  rx="6"  ry="4" fill="#341E08" opacity="0.5"/>
+    <ellipse cx="-6" cy="-6" rx="5" ry="3" fill="#2E2410" opacity="0.4" transform="rotate(-20 -6 -6)"/>
+    <ellipse cx="18" cy="4"  rx="4" ry="2.5" fill="#120E06" transform="rotate(15 18 4)"/>
+    <ellipse cx="20" cy="0"  rx="3" ry="2"   fill="#0E0A04" transform="rotate(-10 20 0)"/>
+    <ellipse cx="-18" cy="-4" rx="11" ry="8" fill="#221A0A"/>
+    <ellipse cx="-26" cy="-5" rx="7" ry="6" fill="#1A1208"/>
+
+    <circle cx="-30" cy="-9"  r="1.4" fill="#CC4400" opacity="0.9"/>
+    <circle cx="-26" cy="-11" r="1.6" fill="#DD5500" opacity="0.95"/>
+    <circle cx="-22" cy="-10" r="1.4" fill="#CC4400" opacity="0.9"/>
+    <circle cx="-30" cy="-5"  r="1.2" fill="#AA3300" opacity="0.7"/>
+    <circle cx="-24" cy="-6"  r="1.2" fill="#AA3300" opacity="0.7"/>
+    <circle cx="-30" cy="-10" r="0.4" fill="#FF8844" opacity="0.8"/>
+    <circle cx="-26" cy="-12" r="0.5" fill="#FF8844" opacity="0.9"/>
+    <circle cx="-22" cy="-11" r="0.4" fill="#FF8844" opacity="0.8"/>
+    <path d="M-32,-4 Q-36,-1 -35,3"  fill="none" stroke="#1A1208" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M-32,-2 Q-37,1 -36,5"   fill="none" stroke="#1A1208" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="-35" cy="3"  r="1.5" fill="#0A2A08"/>
+    <circle cx="-36" cy="5"  r="1.5" fill="#0A2A08"/>
+    <path d="M-14,-6 Q-22,-14 -32,-18 Q-38,-20 -40,-16" fill="none" stroke="#1A1208" stroke-width="2"   stroke-linecap="round"/>
+    <path d="M-16,-2 Q-26,-8  -38,-10 Q-44,-11 -46,-7"  fill="none" stroke="#181006" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M-16, 2 Q-26, 4  -36, 8  Q-42, 10 -42, 14" fill="none" stroke="#1A1208" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M-14, 6 Q-22, 12 -30, 18 Q-34, 22 -32, 26" fill="none" stroke="#181006" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M-4,-10 Q 4,-20 12,-26 Q 18,-30 20,-26"   fill="none" stroke="#1A1208" stroke-width="2"   stroke-linecap="round"/>
+    <path d="M 0,-12 Q 8,-24 18,-30 Q 24,-34 26,-30"   fill="none" stroke="#181006" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M 6,-10 Q 14,-18 22,-22 Q 28,-24 28,-20"  fill="none" stroke="#1A1208" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M 8, -6 Q 16,-12 22,-14 Q 28,-14 27,-10"  fill="none" stroke="#181006" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+</svg>
+
+
+<script>
+  const DEADLINE = new Date('2026-06-02T06:59:59Z');
+  const START    = new Date('2026-01-01T08:00:00Z');
+
+  const elDays   = document.getElementById('days');
+  const elHours  = document.getElementById('hours');
+  const elMins   = document.getElementById('minutes');
+  const elSecs   = document.getElementById('seconds');
+  const elFill   = document.getElementById('progress-fill');
+  const elPct    = document.getElementById('pct-label');
+  const elFlavor = document.getElementById('status-flavor');
+  const elPlain  = document.getElementById('status-plain');
+  const elTrack  = document.getElementById('progress-track');
+
+  const charGollum = document.getElementById('pin-gollum');
+  const charFrodo  = document.getElementById('pin-frodo');
+  const charSam    = document.getElementById('pin-sam');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  // GAP in px between each character; converted to % of track width for CSS left
+  const GAP_PX = 36;
+
+  function placeCharacters(pct) {
+    const w = elTrack.getBoundingClientRect().width || 580;
+    const gapPct = (GAP_PX / w) * 100;
+    charFrodo .style.left = pct + '%';
+    charGollum.style.left = (pct + gapPct) + '%';
+    charSam   .style.left = (pct - gapPct) + '%';
+  }
+
+  const stages = [
+    { minDays: 60, flavor: "The Fellowship is assembling. The road goes ever on — there is still much time before the fires of Mount Doom.", plain: "Begin preparing your bid materials." },
+    { minDays: 30, flavor: "You have left the Shire. The journey is underway; do not linger in Rivendell.", plain: "Review your benefit designs and pricing structures." },
+    { minDays: 14, flavor: "The shadow of Mordor grows long. Sauron's eye turns toward the deadline.", plain: "Less than 30 days remain. Validate your submissions." },
+    { minDays: 7,  flavor: "The beacons of Gondor are lit! The White Rider urges you — ride hard, ride fast.", plain: "Two weeks left. Finalize your bid packages." },
+    { minDays: 3,  flavor: "You stand upon the threshold of Mordor. There is no more time for delay.", plain: "One week remaining. Submit without hesitation." },
+    { minDays: 1,  flavor: "Frodo has nearly reached the Cracks of Doom. Do not falter now, dear actuary.", plain: "3 days left. This is your final warning." },
+    { minDays: 0,  flavor: "One does not simply miss the bid deadline. Today is the day. Cast it into the fire.", plain: "Deadline is TODAY at 11:59:59 PM PDT." },
+  ];
+
+  const quotes = [
+    "\"Even the smallest actuary can change the course of the future.\"",
+    "\"All we have to decide is what to do with the time that is given us.\"",
+    "\"Not all those who wander are lost — but your bid submission might be.\"",
+    "\"One deadline to rule them all, one deadline to find them.\"",
+    "\"The board is set. The pieces are moving. Have you filed your bids?\"",
+    "\"There is some good in this world, and it's worth submitting bids for.\"",
+  ];
+
+  function tick() {
+    const now  = new Date();
+    const diff = DEADLINE - now;
+
+    if (diff <= 0) {
+      [elDays, elHours, elMins, elSecs].forEach(el => { el.textContent = '00'; el.classList.add('urgent'); });
+      elFill.style.width      = '100%';
+      elFill.style.background = '#E8400A';
+      elPct.textContent       = 'The fires of Mount Doom';
+      elFlavor.textContent    = 'It is done. The Deadline of Doom has passed into shadow.';
+      elPlain.textContent     = 'The bid submission window is now closed.';
+      placeCharacters(100);
+      drawWeb(100);
+      return;
+    }
+
+    const totalSecs = Math.floor(diff / 1000);
+    const d = Math.floor(totalSecs / 86400);
+    const h = Math.floor((totalSecs % 86400) / 3600);
+    const m = Math.floor((totalSecs % 3600) / 60);
+    const s = totalSecs % 60;
+
+    elDays.textContent  = pad(d);
+    elHours.textContent = pad(h);
+    elMins.textContent  = pad(m);
+    elSecs.textContent  = pad(s);
+
+    [elDays, elHours, elMins, elSecs].forEach(el => el.classList.toggle('urgent', d < 7));
+
+    const pct = Math.min(100, Math.max(0, ((now - START) / (DEADLINE - START)) * 100));
+    elFill.style.width      = pct.toFixed(2) + '%';
+    elFill.style.background = pct > 85 ? '#E8400A' : pct > 60 ? '#D4690A' : '#C8860A';
+    elPct.textContent       = Math.round(pct) + '% of the journey complete';
+
+    placeCharacters(pct);
+    drawWeb(pct);
+
+    const stage = stages.find(st => d >= st.minDays) || stages[stages.length - 1];
+    elFlavor.textContent = stage.flavor;
+    elPlain.textContent  = stage.plain;
+  }
+
+  // Rotate quotes
+  let qi = 0;
+  const quoteEl = document.getElementById('ring-inscription');
+  quoteEl.style.transition = 'opacity 0.4s ease';
+  setInterval(() => {
+    qi = (qi + 1) % quotes.length;
+    quoteEl.style.opacity = '0';
+    setTimeout(() => { quoteEl.textContent = quotes[qi]; quoteEl.style.opacity = '0.75'; }, 420);
+  }, 8000);
+
+  // ── SHELOB WEB ──
+  // Web is drawn in the bottom-right corner. Origin = (230,230) in the SVG,
+  // matching Shelob's body anchor. Spokes radiate up/left; rings grow with pct.
+  const webGroup  = document.getElementById('shelob-web');
+
+  // Spoke angles (radians) — fan spread symmetrically from bottom-right corner
+  const SPOKES = [
+    Math.PI * 0.88,
+    Math.PI * 0.98,
+    Math.PI * 1.11,
+    Math.PI * 1.25,
+    Math.PI * 1.40,
+    Math.PI * 1.55,
+    Math.PI * 1.68,
+  ];
+
+  // How many concentric rings at 100%
+  const MAX_RINGS = 8;
+  // Max spoke length in px
+  const MAX_SPOKE = 200;
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function drawWeb(pct) {
+    // Clear previous web
+    while (webGroup.firstChild) webGroup.removeChild(webGroup.firstChild);
+
+    if (pct < 1) return;
+
+    const ox = 230, oy = 230; // origin matches shelob body transform
+    const spokeLen  = MAX_SPOKE * Math.min(1, pct / 100);
+    const ringCount = Math.max(1, Math.round((pct / 100) * MAX_RINGS));
+    const webOpacity = 0.18 + (pct / 100) * 0.32; // fades in as web grows
+
+    const spokeColor = `rgba(220,210,180,${webOpacity})`;
+    const ringColor  = `rgba(210,200,170,${webOpacity * 0.85})`;
+
+    // Draw spokes
+    SPOKES.forEach(angle => {
+      const x = ox + Math.cos(angle) * spokeLen;
+      const y = oy + Math.sin(angle) * spokeLen;
+      const line = document.createElementNS(NS, 'line');
+      line.setAttribute('x1', ox); line.setAttribute('y1', oy);
+      line.setAttribute('x2', x.toFixed(1)); line.setAttribute('y2', y.toFixed(1));
+      line.setAttribute('stroke', spokeColor);
+      line.setAttribute('stroke-width', '0.7');
+      webGroup.appendChild(line);
+    });
+
+    // Draw concentric ring segments connecting spokes
+    for (let r = 1; r <= ringCount; r++) {
+      const t = r / MAX_RINGS;
+      const rLen = spokeLen * t;
+      // slight spiral offset for organic feel
+      const spiralOffset = t * 0.08;
+
+      const points = SPOKES.map((angle, i) => {
+        const a = angle + spiralOffset * i;
+        return [
+          ox + Math.cos(a) * rLen,
+          oy + Math.sin(a) * rLen
+        ];
+      });
+
+      // draw segments between adjacent spoke-ring intersections
+      for (let i = 0; i < points.length - 1; i++) {
+        // slightly curved segment using quadratic bezier
+        const mx = (points[i][0] + points[i+1][0]) / 2;
+        const my = (points[i][1] + points[i+1][1]) / 2;
+        // pull control point slightly inward toward origin for curve
+        const cx = mx + (ox - mx) * 0.08;
+        const cy = my + (oy - my) * 0.08;
+
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d',
+          `M ${points[i][0].toFixed(1)},${points[i][1].toFixed(1)}
+           Q ${cx.toFixed(1)},${cy.toFixed(1)}
+             ${points[i+1][0].toFixed(1)},${points[i+1][1].toFixed(1)}`
+        );
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', ringColor);
+        path.setAttribute('stroke-width', '0.65');
+        webGroup.appendChild(path);
+      }
+    }
+
+  }
+
+  // Initial placement after layout, then tick every second
+  requestAnimationFrame(() => { tick(); });
+  setInterval(tick, 1000);
+
+  // ── SHELOB MOVEMENT ──
+  // Shelob patrols her web independently via rAF.
+  // She moves between waypoints on the spoke/ring intersections,
+  // pausing occasionally like a real spider waiting for prey.
+  const shelob = document.getElementById('shelob-body');
+
+  // Waypoints are offsets from her home (230,230) — she wanders in the upper-left quadrant
+  const waypointAngles = [
+    Math.PI * 0.88,
+    Math.PI * 1.02,
+    Math.PI * 1.25,
+    Math.PI * 1.42,
+    Math.PI * 1.55,
+  ];
+
+  // Build a patrol sequence: mix of inner and outer ring positions
+  function makeWaypoints() {
+    const pts = [];
+    // home position
+    pts.push({ x: 0, y: 0, pause: 2000 + Math.random() * 2000 });
+    // roam out along spokes to various radii
+    waypointAngles.forEach(angle => {
+      const r = 40 + Math.random() * 80;
+      pts.push({
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r,
+        pause: 600 + Math.random() * 1800
+      });
+    });
+    // shuffle for variety
+    for (let i = pts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pts[i], pts[j]] = [pts[j], pts[i]];
+    }
+    return pts;
+  }
+
+  let shelWaypoints = makeWaypoints();
+  let shelWpIdx     = 0;
+  let shelCurX      = 0, shelCurY = 0;
+  let shelTgtX      = 0, shelTgtY = 0;
+  let shelPauseUntil = 0;
+  let shelLastTime   = null;
+  const SHELOB_SPEED = 28; // px per second
+
+  function animateShelob(ts) {
+    if (!shelLastTime) shelLastTime = ts;
+    const dt = (ts - shelLastTime) / 1000;
+    shelLastTime = ts;
+
+    const now = ts;
+
+    if (now < shelPauseUntil) {
+      // Pausing — do nothing but keep requesting frames
+      requestAnimationFrame(animateShelob);
+      return;
+    }
+
+    const wp = shelWaypoints[shelWpIdx];
+    shelTgtX = wp.x;
+    shelTgtY = wp.y;
+
+    const dx = shelTgtX - shelCurX;
+    const dy = shelTgtY - shelCurY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 1.5) {
+      // Arrived — pause, then move to next waypoint
+      shelCurX = shelTgtX;
+      shelCurY = shelTgtY;
+      shelPauseUntil = ts + wp.pause;
+      shelWpIdx = (shelWpIdx + 1) % shelWaypoints.length;
+      // Rebuild waypoints each full loop for variety
+      if (shelWpIdx === 0) shelWaypoints = makeWaypoints();
+    } else {
+      // Move toward target
+      const step = Math.min(SHELOB_SPEED * dt, dist);
+      shelCurX += (dx / dist) * step;
+      shelCurY += (dy / dist) * step;
+    }
+
+    // Apply position — offset from her anchor (230,230)
+    if (shelob) {
+      shelob.setAttribute('transform',
+        `translate(${(230 + shelCurX).toFixed(2)}, ${(230 + shelCurY).toFixed(2)})`
+      );
+    }
+
+    requestAnimationFrame(animateShelob);
+  }
+
+  requestAnimationFrame(animateShelob);
+</script>
+</body>
+</html>
