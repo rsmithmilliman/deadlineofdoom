@@ -1620,15 +1620,26 @@
   document.getElementById('nazgul-flier').addEventListener('click', (e) => {
     e.stopPropagation();
     const shriek = document.getElementById('nazgul-shriek');
+
+    // Dark overlay behind the text
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:none;z-index:140;transition:background 0.3s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.72)'; });
+
     shriek.classList.add('active');
 
-    // Screen-flash red
+    // Screen-flash red on top
     const flash = document.createElement('div');
-    flash.style.cssText = 'position:fixed;inset:0;background:rgba(180,20,0,0.25);pointer-events:none;z-index:99;transition:opacity 0.5s ease;';
+    flash.style.cssText = 'position:fixed;inset:0;background:rgba(180,20,0,0.3);pointer-events:none;z-index:99;transition:opacity 0.5s ease;';
     document.body.appendChild(flash);
     setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 600); }, 100);
 
-    setTimeout(() => shriek.classList.remove('active'), 2800);
+    setTimeout(() => {
+      shriek.classList.remove('active');
+      dim.style.background = 'rgba(0,0,0,0)';
+      setTimeout(() => dim.remove(), 350);
+    }, 2800);
     showToast('☠ The Witch-king has marked you.');
   });
 
