@@ -347,9 +347,345 @@
       .unit { padding: 0 0.7rem; }
       .unit-value { font-size: 32px; }
     }
+
+  /* ── EASTER EGG STYLES ── */
+  .ring-wrap { cursor: pointer; }
+  .ring-wrap:hover .ring-svg { filter: drop-shadow(0 0 28px rgba(240,166,35,0.9)) drop-shadow(0 0 64px rgba(240,166,35,0.5)); }
+
+  /* Black Speech overlay */
+  #black-speech-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 100;
+    background: rgba(0,0,0,0);
+    transition: background 0.4s ease;
+  }
+  #black-speech-overlay.active { background: rgba(0,0,0,0.7); pointer-events: all; }
+  #black-speech-text {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(16px, 3vw, 28px);
+    color: #F5D87A;
+    text-align: center;
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    padding: 2rem;
+    text-shadow: 0 0 40px rgba(240,166,35,0.8), 0 0 80px rgba(200,100,10,0.5);
+    max-width: 700px;
+  }
+  #black-speech-overlay.active #black-speech-text { opacity: 1; transform: scale(1); }
+
+  /* Gandalf overlay */
+  #gandalf-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  #gandalf-overlay.active { opacity: 1; pointer-events: all; }
+  #gandalf-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 600;
+    color: #FFFFFF;
+    text-shadow: 0 0 20px #fff, 0 0 60px rgba(200,200,255,0.8), 0 0 120px rgba(150,150,255,0.5);
+    letter-spacing: 0.06em;
+    text-align: center;
+    padding-bottom: 8vh;
+    animation: gandalfPulse 0.4s ease-in-out infinite alternate;
+  }
+  @keyframes gandalfPulse {
+    from { text-shadow: 0 0 20px #fff, 0 0 60px rgba(200,200,255,0.8), 0 0 120px rgba(150,150,255,0.5); }
+    to   { text-shadow: 0 0 40px #fff, 0 0 100px rgba(220,220,255,1),   0 0 200px rgba(180,180,255,0.8); }
+  }
+
+  /* Nazgûl shriek */
+  #nazgul-shriek {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(20px, 4vw, 38px);
+    color: var(--lava);
+    text-shadow: 0 0 30px rgba(232,64,10,0.9);
+    text-align: center;
+    pointer-events: none;
+    z-index: 150;
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    white-space: nowrap;
+  }
+  #nazgul-shriek.active {
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(1);
+  }
+
+  /* Shire mode */
+  body.shire-mode {
+    transition: background-color 1s ease;
+    background-color: #0A2A05 !important;
+  }
+  body.shire-mode::before {
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 110%, rgba(40,120,0,0.4) 0%, transparent 65%),
+      radial-gradient(ellipse 80% 40% at 20% 100%, rgba(20,80,0,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 80% 100%, rgba(30,100,0,0.3) 0%, transparent 60%);
+  }
+
+  /* Mordor / Eye of Sauron overlay */
+  #sauron-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    pointer-events: none;
+    z-index: 500;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  #sauron-overlay.active { opacity: 1; pointer-events: all; }
+  #sauron-overlay svg { overflow: visible; }
+
+  /* pupil slit flicker */
+  @keyframes sauronPupilFlicker {
+    0%,100% { transform: scaleY(1); }
+    45%      { transform: scaleY(0.55); }
+    50%      { transform: scaleY(0.7); }
+    55%      { transform: scaleY(0.5); }
+  }
+  @keyframes sauronIrisRotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes sauronGlowPulse {
+    0%,100% { opacity: 0.55; r: 210; }
+    50%      { opacity: 0.85; r: 230; }
+  }
+  @keyframes sauronOuterGlow {
+    0%,100% { opacity: 0.2; }
+    50%      { opacity: 0.45; }
+  }
+  #sauron-iris-ring {
+    transform-origin: 50% 50%;
+    transform-box: fill-box;
+    animation: sauronIrisRotate 8s linear infinite;
+  }
+  #sauron-pupil-group {
+    transform-origin: 50% 50%;
+    transform-box: fill-box;
+    animation: sauronPupilFlicker 3.5s ease-in-out infinite;
+  }
+
+  /* Ember shower */
+  .ember {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 50;
+    animation: emberFall linear forwards;
+  }
+  @keyframes emberFall {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(80vh) rotate(720deg); }
+  }
+
+  /* Shelob lunge indicator */
+  .shelob-lunge-flash {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(ellipse at bottom right, rgba(150,50,0,0.4) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .shelob-lunge-flash.active { opacity: 1; }
+
+  /* Toast notification for keyboard codes */
+  #easter-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(26,8,0,0.95);
+    border: 1px solid rgba(200,134,10,0.4);
+    color: var(--gold-pale);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    padding: 10px 22px;
+    z-index: 300;
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  #easter-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
   </style>
 </head>
 <body>
+
+<!-- ── EASTER EGG OVERLAYS ── -->
+<div id="black-speech-overlay" role="dialog" aria-modal="true" aria-label="The One Ring inscription">
+  <div id="black-speech-text">
+    Ash nazg durbatulûk, ash nazg gimbatul,<br>
+    ash nazg thrakatulûk agh burzum-ishi krimpatul.<br><br>
+    <span style="font-size:0.6em; color: var(--ash-dim); font-family: 'Share Tech Mono', monospace; letter-spacing:0.12em;">
+      One Ring to rule them all, one Ring to find them,<br>
+      One Ring to bring them all and in the darkness bind them.<br><br>
+      [ click to close ]
+    </span>
+  </div>
+</div>
+
+<div id="gandalf-overlay" role="alert">
+  <div id="gandalf-text">YOU SHALL NOT MISS THIS DEADLINE.</div>
+</div>
+
+<div id="nazgul-shriek">
+  &#x1F4A8; The Nazgûl has noticed your calendar block.<br>
+  <span style="font-size:0.6em; color:var(--ash-dim);">Screech of the Witch-king detected.</span>
+</div>
+
+<div class="shelob-lunge-flash" id="shelob-flash"></div>
+<div id="easter-toast"></div>
+
+<!-- Eye of Sauron overlay -->
+<div id="sauron-overlay" role="alert" aria-label="The Eye of Sauron">
+  <svg id="sauron-eye-svg" width="520" height="520" viewBox="-260 -260 520 520" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FF6600" stop-opacity="0.5"/>
+        <stop offset="60%"  stop-color="#CC2200" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#000"    stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FF8800"/>
+        <stop offset="35%"  stop-color="#CC3300"/>
+        <stop offset="70%"  stop-color="#881100"/>
+        <stop offset="100%" stop-color="#3A0800"/>
+      </radialGradient>
+      <radialGradient id="pupilGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#000"/>
+        <stop offset="70%"  stop-color="#0A0000"/>
+        <stop offset="100%" stop-color="#1A0400"/>
+      </radialGradient>
+      <radialGradient id="innerFlame" cx="50%" cy="38%" r="55%">
+        <stop offset="0%"   stop-color="#FFDD44" stop-opacity="0.9"/>
+        <stop offset="40%"  stop-color="#FF6600" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#AA1100" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="eyeBlur">
+        <feGaussianBlur stdDeviation="8"/>
+      </filter>
+      <filter id="glowFilter">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <clipPath id="eyeShapeClip">
+        <!-- almond/eye shape for clipping iris and pupil -->
+        <ellipse cx="0" cy="0" rx="155" ry="95"/>
+      </clipPath>
+    </defs>
+
+    <!-- outer ambient glow halos -->
+    <circle cx="0" cy="0" r="240" fill="url(#eyeGlow)" filter="url(#eyeBlur)" opacity="0.4">
+      <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="210;245;210" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="185" fill="url(#eyeGlow)" filter="url(#eyeBlur)" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.55;0.3" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- eyelid shape — the white/outer ring of fire -->
+    <ellipse cx="0" cy="0" rx="160" ry="98" fill="#3A0800"/>
+    <ellipse cx="0" cy="0" rx="155" ry="93" fill="#CC2200" opacity="0.6"/>
+
+    <!-- iris — filled almond -->
+    <ellipse cx="0" cy="0" rx="155" ry="92" fill="url(#irisGrad)"/>
+
+    <!-- inner flame shimmer over iris -->
+    <ellipse cx="0" cy="0" rx="155" ry="92" fill="url(#innerFlame)" opacity="0.55">
+      <animate attributeName="opacity" values="0.55;0.8;0.4;0.7;0.55" dur="2.8s" repeatCount="indefinite"/>
+    </ellipse>
+
+    <!-- rotating iris texture ring -->
+    <g id="sauron-iris-ring" clip-path="url(#eyeShapeClip)">
+      <!-- spokes radiating from center -->
+      <line x1="0" y1="-140" x2="0"   y2="140"   stroke="#FF4400" stroke-width="0.8" opacity="0.35"/>
+      <line x1="-140" y1="0" x2="140" y2="0"      stroke="#FF4400" stroke-width="0.8" opacity="0.35"/>
+      <line x1="-99" y1="-99" x2="99" y2="99"     stroke="#FF4400" stroke-width="0.7" opacity="0.25"/>
+      <line x1="99"  y1="-99" x2="-99" y2="99"    stroke="#FF4400" stroke-width="0.7" opacity="0.25"/>
+      <line x1="-130" y1="-50" x2="130" y2="50"   stroke="#DD3300" stroke-width="0.6" opacity="0.2"/>
+      <line x1="-130" y1="50"  x2="130" y2="-50"  stroke="#DD3300" stroke-width="0.6" opacity="0.2"/>
+      <line x1="-50" y1="-130" x2="50"  y2="130"  stroke="#DD3300" stroke-width="0.6" opacity="0.2"/>
+      <line x1="50"  y1="-130" x2="-50" y2="130"  stroke="#DD3300" stroke-width="0.6" opacity="0.2"/>
+      <!-- concentric rings -->
+      <circle cx="0" cy="0" r="40"  fill="none" stroke="#FF6600" stroke-width="1.2" opacity="0.4"/>
+      <circle cx="0" cy="0" r="75"  fill="none" stroke="#FF4400" stroke-width="1"   opacity="0.3"/>
+      <circle cx="0" cy="0" r="110" fill="none" stroke="#CC2200" stroke-width="0.9" opacity="0.25"/>
+    </g>
+
+    <!-- pupil — vertical slit, flickers -->
+    <g id="sauron-pupil-group" clip-path="url(#eyeShapeClip)">
+      <ellipse cx="0" cy="0" rx="32" ry="88" fill="url(#pupilGrad)"/>
+      <!-- inner void darkness -->
+      <ellipse cx="0" cy="0" rx="22" ry="78" fill="#000" opacity="0.92"/>
+      <!-- tiny ember glints inside pupil -->
+      <ellipse cx="0" cy="-18" rx="6" ry="3" fill="#FF6600" opacity="0.35">
+        <animate attributeName="opacity" values="0.35;0.6;0.2;0.5;0.35" dur="1.8s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <!-- eyelid rim / lid edges — upper and lower pointed almond tips -->
+    <path d="M-160,0 Q-80,-110 0,-95 Q80,-110 160,0 Q80,110 0,95 Q-80,110 -160,0 Z"
+          fill="none" stroke="#FF6622" stroke-width="2.5" opacity="0.8"/>
+    <!-- inner rim glow -->
+    <path d="M-155,0 Q-78,-104 0,-90 Q78,-104 155,0 Q78,104 0,90 Q-78,104 -155,0 Z"
+          fill="none" stroke="#FF9944" stroke-width="1.2" opacity="0.45"/>
+
+    <!-- corner flame wisps -->
+    <ellipse cx="-158" cy="0" rx="18" ry="8" fill="#FF6600" opacity="0.5" filter="url(#eyeBlur)">
+      <animate attributeName="opacity" values="0.5;0.8;0.3;0.6;0.5" dur="1.6s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="158" cy="0" rx="18" ry="8" fill="#FF6600" opacity="0.5" filter="url(#eyeBlur)">
+      <animate attributeName="opacity" values="0.4;0.7;0.5;0.8;0.4" dur="1.9s" repeatCount="indefinite"/>
+    </ellipse>
+  </svg>
+
+  <!-- "I see you" caption -->
+  <div style="position:absolute; bottom: 18vh; left:50%; transform:translateX(-50%);
+              font-family:'Cinzel',serif; font-size:clamp(14px,2.5vw,22px); color:#FF6622;
+              letter-spacing:0.25em; text-transform:uppercase; opacity:0; text-align:center;
+              text-shadow:0 0 20px rgba(255,80,0,0.8); white-space:nowrap;"
+       id="sauron-caption">
+    T H E &nbsp; E Y E &nbsp; I S &nbsp; U P O N &nbsp; Y O U
+  </div>
+</div>
 
 <!-- ── NAZGÛL — fixed to right side, swooping low across the page ── -->
 <svg id="nazgul" aria-label="A Nazgul circles overhead" xmlns="http://www.w3.org/2000/svg"
@@ -367,7 +703,7 @@
              C 340,60  370,70  380,40 Z"/>
   </defs>
 
-  <g id="nazgul-flier">
+  <g id="nazgul-flier" style="pointer-events:all; cursor:crosshair;" title="Click the Nazgûl if you dare...">
     <!-- ── FELL BEAST body ── -->
     <ellipse cx="0" cy="0" rx="18" ry="7" fill="#1A1008"/>
     <path d="M14,0 Q22,-5 28,-8" fill="none" stroke="#1A1008" stroke-width="5" stroke-linecap="round"/>
@@ -534,7 +870,7 @@
     <div class="progress-row">
 
       <!-- THE SHIRE -->
-      <div class="landmark landmark-shire" aria-label="The Shire">
+      <div class="landmark landmark-shire" id="shire-landmark" aria-label="The Shire" style="cursor:pointer;" title="">
         <div class="landmark-label">The Shire</div>
         <div class="landmark-date">Jan 1</div>
         <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
@@ -789,7 +1125,7 @@
 
       <!-- MOUNT DOOM -->
       <div class="landmark landmark-doom" aria-label="Mount Doom">
-        <svg width="180" height="220" viewBox="0 -10 80 100" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+        <svg id="mount-doom-svg" width="180" height="220" viewBox="0 -10 80 100" xmlns="http://www.w3.org/2000/svg" overflow="visible">
           <!-- labels inside SVG, centered over the graphic -->
           <text x="34" y="6"  text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="5.5" fill="#E8400A" letter-spacing="0.12em" opacity="0.9" text-transform="uppercase">MOUNT DOOM</text>
           <text x="34" y="12" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="4.5" fill="rgba(201,187,168,0.5)" letter-spacing="0.1em">JUN 1</text>
@@ -911,6 +1247,7 @@
           </circle>
 
           <!-- base shadow -->
+          <g id="doom-overflow"></g>
           <ellipse cx="36" cy="78" rx="34" ry="5" fill="#1A0800" opacity="0.6"/>
         </svg>
       </div>
@@ -925,14 +1262,14 @@
 
   <div class="rule"><div class="rule-line"></div><div class="rule-diamond"></div><div class="rule-line"></div></div>
 
-  <p class="footer">All times in PDT (UTC&minus;7) &nbsp;&middot;&nbsp; CMS Plan Bid and Formulary Submission System &nbsp;&middot;&nbsp; You shall not miss this deadline.</p>
+  <p class="footer">All times in PDT (UTC&minus;7) &nbsp;&middot;&nbsp; CMS Plan Bid and Formulary Submission System &nbsp;&middot;&nbsp; You shall not miss this deadline. &nbsp;&middot;&nbsp; <span id="easter-diamond" style="opacity:0.5; cursor:default;">&#9670;</span></p>
 
 </div>
 
 <svg id="shelob-svg" aria-label="Shelob the Great Spider builds her web" xmlns="http://www.w3.org/2000/svg"
      style="position:fixed; bottom:0; right:0; width:280px; height:280px; pointer-events:none; z-index:10; overflow:visible;">
   <g id="shelob-web"></g>
-  <g id="shelob-body" transform="translate(230, 230)">
+  <g id="shelob-body" transform="translate(230, 230)" style="pointer-events:all; cursor:crosshair;" title="Don't disturb the spider...">
     <ellipse cx="0" cy="0" rx="22" ry="16" fill="#1A1208"/>
     <ellipse cx="0" cy="-2" rx="10" ry="7" fill="#2A1E0A" opacity="0.7"/>
     <ellipse cx="0" cy="2"  rx="6"  ry="4" fill="#341E08" opacity="0.5"/>
@@ -1252,6 +1589,650 @@
   }
 
   requestAnimationFrame(animateShelob);
+
+  // ════════════════════════════════════════════════
+  // ── EASTER EGGS ──
+  // ════════════════════════════════════════════════
+
+  // ── Toast helper ──
+  function showToast(msg, duration = 3200) {
+    const toast = document.getElementById('easter-toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  // ── 1. CLICK THE RING — show Black Speech inscription ──
+  document.querySelector('.ring-wrap').addEventListener('click', () => {
+    const overlay = document.getElementById('black-speech-overlay');
+    overlay.classList.add('active');
+    // pulse the ring glow briefly
+    const ring = document.querySelector('.ring-svg');
+    ring.style.filter = 'drop-shadow(0 0 50px rgba(240,166,35,1)) drop-shadow(0 0 100px rgba(200,100,10,0.9))';
+    setTimeout(() => { ring.style.filter = ''; }, 1200);
+  });
+  document.getElementById('black-speech-overlay').addEventListener('click', function() {
+    this.classList.remove('active');
+  });
+
+  // ── 2. CLICK THE NAZGÛL ──
+  const nazgulEl = document.getElementById('nazgul');
+  document.getElementById('nazgul-flier').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const shriek = document.getElementById('nazgul-shriek');
+    shriek.classList.add('active');
+
+    // Screen-flash red
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;background:rgba(180,20,0,0.25);pointer-events:none;z-index:99;transition:opacity 0.5s ease;';
+    document.body.appendChild(flash);
+    setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 600); }, 100);
+
+    setTimeout(() => shriek.classList.remove('active'), 2800);
+    showToast('☠ The Witch-king has marked you.');
+  });
+
+  // ── 3. CLICK SHELOB ──
+  let shelLunging = false;
+  document.getElementById('shelob-body').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (shelLunging) return;
+    shelLunging = true;
+
+    const flash = document.getElementById('shelob-flash');
+    flash.classList.add('active');
+    setTimeout(() => flash.classList.remove('active'), 200);
+
+    // Make Shelob zoom toward center briefly
+    const body = document.getElementById('shelob-body');
+    body.style.transition = 'transform 0.15s ease';
+    const lunge = { x: shelCurX - 60, y: shelCurY - 60 };
+    body.setAttribute('transform',
+      `translate(${(230 + lunge.x).toFixed(0)},${(230 + lunge.y).toFixed(0)})`);
+
+    // Add a web strand shooting out
+    const webStrand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    const svgEl = document.getElementById('shelob-svg');
+    webStrand.setAttribute('x1', (230 + shelCurX).toFixed(0));
+    webStrand.setAttribute('y1', (230 + shelCurY).toFixed(0));
+    webStrand.setAttribute('x2', '60');
+    webStrand.setAttribute('y2', '60');
+    webStrand.setAttribute('stroke', 'rgba(220,210,180,0.7)');
+    webStrand.setAttribute('stroke-width', '1');
+    svgEl.appendChild(webStrand);
+
+    setTimeout(() => {
+      body.style.transition = '';
+      svgEl.removeChild(webStrand);
+      shelLunging = false;
+    }, 600);
+
+    showToast("🕷 Shelob lunges! She has caught a bid actuary.");
+  });
+
+  // ── 4. CLICK PROGRESS BAR AT ~50% — Gandalf "You shall not pass!" ──
+
+  function triggerGandalf() {
+    const overlay = document.getElementById('gandalf-overlay');
+    overlay.classList.add('active');
+
+    // Flash white — build up fast, hold, then slowly fade
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,0);pointer-events:none;z-index:199;transition:background 0.15s ease;';
+    document.body.appendChild(flash);
+    // Slam to full brightness
+    requestAnimationFrame(() => {
+      flash.style.background = 'rgba(255,255,255,0.92)';
+      // Hold for 1.4s, then slowly fade over 2.5s
+      setTimeout(() => {
+        flash.style.transition = 'background 2.5s ease';
+        flash.style.background = 'rgba(255,255,255,0)';
+        setTimeout(() => flash.remove(), 2600);
+      }, 1400);
+    });
+
+    // Trigger ember shower too
+    triggerEmberShower(20);
+
+    setTimeout(() => {
+      overlay.classList.remove('active');
+    }, 5500);
+  }
+
+  // ── 5. KEYBOARD CODES ──
+  let keyBuffer = '';
+  const KEY_CODES = {
+    'SHIRE':  triggerShireMode,
+    'MORDOR': triggerMordorMode,
+    'PASS':   triggerGandalf,
+    'DOOM':   triggerEmberShowerFull,
+  };
+
+  document.addEventListener('keydown', (e) => {
+    // Don't capture modifier keys or in inputs
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key.length === 1) {
+      keyBuffer += e.key.toUpperCase();
+      if (keyBuffer.length > 8) keyBuffer = keyBuffer.slice(-8);
+      for (const [code, fn] of Object.entries(KEY_CODES)) {
+        if (keyBuffer.endsWith(code)) {
+          fn();
+          keyBuffer = '';
+          break;
+        }
+      }
+    }
+  });
+
+  function triggerShireMode() {
+    document.body.classList.add('shire-mode');
+    document.body.classList.remove('mordor-mode');
+    showToast("🌿 The Shire is safe. For now.");
+    setTimeout(() => document.body.classList.remove('shire-mode'), 8000);
+  }
+
+  function triggerMordorMode() {
+    document.body.classList.remove('shire-mode');
+
+    const overlay = document.getElementById('sauron-overlay');
+    const caption = document.getElementById('sauron-caption');
+    const eyeSvg  = document.getElementById('sauron-eye-svg');
+
+    // Reset state
+    overlay.style.transition = 'opacity 0.8s ease';
+    caption.style.opacity = '0';
+    caption.style.transition = '';
+    eyeSvg.style.opacity = '0';
+    eyeSvg.style.transform = 'scale(0.3)';
+    eyeSvg.style.transition = '';
+
+    // 1. Slam to black
+    overlay.classList.add('active');
+
+    // 2. After blackout settles, iris opens from a pinpoint
+    setTimeout(() => {
+      eyeSvg.style.transition = 'opacity 1.8s ease, transform 1.8s cubic-bezier(0.2,0,0.4,1)';
+      eyeSvg.style.opacity = '1';
+      eyeSvg.style.transform = 'scale(1)';
+    }, 900);
+
+    // 3. "I see you" fades in
+    setTimeout(() => {
+      caption.style.transition = 'opacity 1.2s ease';
+      caption.style.opacity = '1';
+    }, 2400);
+
+    // 4. Hold, then eye contracts back and darkness lifts
+    setTimeout(() => {
+      caption.style.transition = 'opacity 0.8s ease';
+      caption.style.opacity = '0';
+      eyeSvg.style.transition = 'opacity 1s ease, transform 1s ease';
+      eyeSvg.style.opacity = '0';
+      eyeSvg.style.transform = 'scale(0.05)';
+    }, 8000);
+
+    setTimeout(() => {
+      overlay.style.transition = 'opacity 1.2s ease';
+      overlay.classList.remove('active');
+    }, 9000);
+
+    setTimeout(() => {
+      // clean up inline styles so it's ready for next trigger
+      eyeSvg.style.cssText = '';
+      caption.style.cssText = '';
+    }, 8500);
+
+    showToast("👁 One does not simply type MORDOR.");
+  }
+
+  function triggerEmberShowerFull() {
+    triggerEmberShower(60);
+    triggerLavaOverflow();
+    showToast("🔥 The fires of Mount Doom intensify!");
+  }
+
+  function triggerLavaOverflow() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.getElementById('mount-doom-svg');
+    const overflowG = document.getElementById('doom-overflow');
+
+    // Clear any previous run
+    while (overflowG.firstChild) overflowG.removeChild(overflowG.firstChild);
+
+    const TOTAL_MS = 8000;
+    const startTime = performance.now();
+
+    // --- Turbo-bubble the crater pool ---
+    // Temporarily speed up existing crater animations by cloning with faster dur
+    // Instead we dynamically inject extra large bubbles via rAF
+
+    // --- Overflow lava pool spreading at the base ---
+    // A growing ellipse at base of mountain that spreads outward
+    const lavaBase = document.createElementNS(NS, 'ellipse');
+    lavaBase.setAttribute('cx', '36');
+    lavaBase.setAttribute('cy', '76');
+    lavaBase.setAttribute('rx', '0');
+    lavaBase.setAttribute('ry', '0');
+    lavaBase.setAttribute('fill', '#E04000');
+    lavaBase.setAttribute('opacity', '0.85');
+    overflowG.appendChild(lavaBase);
+
+    const lavaBaseGlow = document.createElementNS(NS, 'ellipse');
+    lavaBaseGlow.setAttribute('cx', '36');
+    lavaBaseGlow.setAttribute('cy', '76');
+    lavaBaseGlow.setAttribute('rx', '0');
+    lavaBaseGlow.setAttribute('ry', '0');
+    lavaBaseGlow.setAttribute('fill', '#FFB040');
+    lavaBaseGlow.setAttribute('opacity', '0.5');
+    overflowG.appendChild(lavaBaseGlow);
+
+    // Left overflow river — spills further down than the normal flow
+    const lavaLeft = document.createElementNS(NS, 'path');
+    lavaLeft.setAttribute('fill', 'url(#lavaPool)');
+    lavaLeft.setAttribute('opacity', '0');
+    overflowG.appendChild(lavaLeft);
+
+    // Right overflow river
+    const lavaRight = document.createElementNS(NS, 'path');
+    lavaRight.setAttribute('fill', 'url(#lavaPool)');
+    lavaRight.setAttribute('opacity', '0');
+    overflowG.appendChild(lavaRight);
+
+    // Extra large crater bubbles — 5 of them cycling
+    const bigBubbles = [];
+    const bubbleOffsets = [
+      { cx: 33, delay: 0    },
+      { cx: 38, delay: 180  },
+      { cx: 35, delay: 360  },
+      { cx: 37, delay: 90   },
+      { cx: 34, delay: 270  },
+    ];
+    bubbleOffsets.forEach(b => {
+      const bub = document.createElementNS(NS, 'circle');
+      bub.setAttribute('cx', b.cx);
+      bub.setAttribute('cy', '31');
+      bub.setAttribute('r', '0');
+      bub.setAttribute('fill', '#FFD060');
+      bub.setAttribute('opacity', '0');
+      overflowG.appendChild(bub);
+      bigBubbles.push({ el: bub, cx: b.cx, delay: b.delay, phase: -b.delay });
+    });
+
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+    function frame(now) {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / TOTAL_MS); // 0→1 over total duration
+
+      // Growth curve: ramp up for first 40%, hold, then recede last 20%
+      let growth;
+      if (t < 0.4)       growth = easeInOut(t / 0.4);
+      else if (t < 0.8)  growth = 1;
+      else               growth = easeInOut((1 - t) / 0.2);
+
+      // Lava pool at base — grows outward
+      const bRx = growth * 30;
+      const bRy = growth * 7;
+      lavaBase.setAttribute('rx', bRx.toFixed(1));
+      lavaBase.setAttribute('ry', bRy.toFixed(1));
+      lavaBase.setAttribute('opacity', (0.7 * growth).toFixed(2));
+
+      lavaBaseGlow.setAttribute('rx', (bRx * 0.55).toFixed(1));
+      lavaBaseGlow.setAttribute('ry', (bRy * 0.6).toFixed(1));
+      lavaBaseGlow.setAttribute('opacity', (0.6 * growth).toFixed(2));
+
+      // Left overflow river — flows down and pools wider
+      const lly = 62 + growth * 14;  // tip reaches further down
+      const llx = 16 - growth * 8;   // spreads left
+      lavaLeft.setAttribute('d',
+        `M29,42 Q${22 - growth*3},52 ${llx},${lly} Q${llx+6},${lly} ${llx+10},${lly-8} Q${28 - growth*2},50 32,50Z`);
+      lavaLeft.setAttribute('opacity', (0.85 * growth).toFixed(2));
+
+      // Right overflow river
+      const rly = 62 + growth * 14;
+      const rrx = 56 + growth * 8;
+      lavaRight.setAttribute('d',
+        `M43,42 Q${50 + growth*3},52 ${rrx},${rly} Q${rrx-6},${rly} ${rrx-10},${rly-8} Q${44 + growth*2},50 40,50Z`);
+      lavaRight.setAttribute('opacity', (0.85 * growth).toFixed(2));
+
+      // Big bubbles — each cycles independently, faster when growth is high
+      const bubbleSpeed = 400 + (1 - growth) * 600; // 400ms at peak, 1000ms at rest
+      bigBubbles.forEach(b => {
+        b.phase += 16; // ~60fps frame advance in ms
+        const cyclePos = ((b.phase % bubbleSpeed) / bubbleSpeed);
+        if (cyclePos < 0.5) {
+          // rising
+          const bp = cyclePos / 0.5;
+          const r = growth * (2.5 + bp * 2);
+          const cy = 31 - bp * 8 * growth;
+          b.el.setAttribute('r', r.toFixed(1));
+          b.el.setAttribute('cy', cy.toFixed(1));
+          b.el.setAttribute('opacity', (growth * (1 - bp * 0.3)).toFixed(2));
+        } else {
+          // pop / fade
+          const bp = (cyclePos - 0.5) / 0.5;
+          b.el.setAttribute('r', (growth * 4.5 * (1 - bp)).toFixed(1));
+          b.el.setAttribute('opacity', (growth * (1 - bp)).toFixed(2));
+        }
+      });
+
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        // Clean up
+        while (overflowG.firstChild) overflowG.removeChild(overflowG.firstChild);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+
+  // ── 6. EMBER SHOWER ──
+  function triggerEmberShower(count = 30) {
+    const colors = ['#FFD060','#FF8020','#E8400A','#FF6020','#FFB040'];
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const ember = document.createElement('div');
+        ember.className = 'ember';
+        ember.style.left = (Math.random() * 100) + 'vw';
+        ember.style.top = '-10px';
+        ember.style.background = colors[Math.floor(Math.random() * colors.length)];
+        ember.style.width = (2 + Math.random() * 4) + 'px';
+        ember.style.height = ember.style.width;
+        ember.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+        ember.style.animationDelay = '0s';
+        document.body.appendChild(ember);
+        setTimeout(() => ember.remove(), 4000);
+      }, Math.random() * 1500);
+    }
+  }
+
+
+  // ── Gollum click — MY PRECIOUS ──
+  let gollumStolen = false;
+  document.getElementById('pin-gollum').style.cursor = 'pointer';
+  document.getElementById('pin-gollum').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (gollumStolen) return;
+    gollumStolen = true;
+
+    const pinGollum = document.getElementById('pin-gollum');
+    const pinFrodo  = document.getElementById('pin-frodo');
+    const trackWrap = document.querySelector('.progress-track-wrap');
+
+    // --- 1. Pop up "MY PRECIOUS" speech bubble above Gollum ---
+    const bubble = document.createElement('div');
+    bubble.textContent = 'MY PRECIOUS';
+    bubble.style.cssText = [
+      'position:absolute',
+      'bottom:68px',
+      `left:${pinGollum.style.left}`,
+      'transform:translateX(-50%)',
+      'background:#C8DEC8',
+      'color:#0A1A2E',
+      'font-family:Share Tech Mono,monospace',
+      'font-size:10px',
+      'letter-spacing:0.1em',
+      'padding:4px 8px',
+      'white-space:nowrap',
+      'border-radius:3px',
+      'pointer-events:none',
+      'z-index:20',
+      'opacity:0',
+      'transition:opacity 0.2s ease',
+    ].join(';');
+    trackWrap.appendChild(bubble);
+    const tail = document.createElement('div');
+    tail.style.cssText = [
+      'position:absolute',
+      'bottom:62px',
+      `left:${pinGollum.style.left}`,
+      'transform:translateX(-50%)',
+      'width:0',
+      'height:0',
+      'border-left:5px solid transparent',
+      'border-right:5px solid transparent',
+      'border-top:6px solid #C8DEC8',
+      'pointer-events:none',
+      'z-index:20',
+      'opacity:0',
+      'transition:opacity 0.2s ease',
+    ].join(';');
+    trackWrap.appendChild(tail);
+    requestAnimationFrame(() => { bubble.style.opacity = '1'; tail.style.opacity = '1'; });
+
+    // --- 2. After 1.8s, slide Gollum to Frodo ---
+    setTimeout(() => {
+      bubble.style.opacity = '0';
+      tail.style.opacity   = '0';
+      setTimeout(() => { bubble.remove(); tail.remove(); }, 300);
+
+      pinGollum.style.transition = 'left 1s ease';
+      pinGollum.style.left = pinFrodo.style.left;
+
+      // --- 3. At arrival: Ring transfers ---
+      setTimeout(() => {
+        // Hide ring on Frodo
+        const frodoRingCircles = pinFrodo.querySelectorAll('circle[stroke="#F5D87A"], circle[stroke="rgba(255,220,80,0.4)"]');
+        frodoRingCircles.forEach(c => { c.style.transition = 'opacity 0.4s'; c.style.opacity = '0'; });
+        pinFrodo.style.opacity = '0.5';
+
+        // Add ring to Gollum's SVG
+        const gollumSvg = pinGollum.querySelector('svg');
+        const ringG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const r1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        r1.setAttribute('cx', '-14'); r1.setAttribute('cy', '-2');
+        r1.setAttribute('r', '3'); r1.setAttribute('fill', 'none');
+        r1.setAttribute('stroke', '#F5D87A'); r1.setAttribute('stroke-width', '1.6');
+        const r2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        r2.setAttribute('cx', '-14'); r2.setAttribute('cy', '-2');
+        r2.setAttribute('r', '3'); r2.setAttribute('fill', 'none');
+        r2.setAttribute('stroke', 'rgba(255,220,80,0.5)'); r2.setAttribute('stroke-width', '3');
+        ringG.appendChild(r1); ringG.appendChild(r2);
+        ringG.style.opacity = '0'; ringG.style.transition = 'opacity 0.4s';
+        gollumSvg.appendChild(ringG);
+        requestAnimationFrame(() => { ringG.style.opacity = '1'; });
+
+        // Gollum eyes go gold
+        gollumSvg.querySelectorAll('circle[fill="#88BBFF"]').forEach(eye => eye.setAttribute('fill', '#FFD060'));
+
+        showToast('🥺 Gollum has the Precious!');
+
+        // --- 4. Spawn a dark cave at a random spot on the page ---
+        const caveX = 15 + Math.random() * 55;
+        const caveY = 20 + Math.random() * 45;
+        const cave = document.createElement('div');
+        cave.style.cssText = [
+          'position:fixed',
+          `left:${caveX}vw`,
+          `top:${caveY}vh`,
+          'transform:translate(-50%,-50%)',
+          'pointer-events:none',
+          'z-index:300',
+          'opacity:0',
+          'transition:opacity 0.8s ease',
+        ].join(';');
+        cave.innerHTML = `<svg width="90" height="75" viewBox="0 0 90 75" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <!-- cave glow -->
+          <ellipse cx="45" cy="50" rx="38" ry="18" fill="rgba(40,20,0,0.5)" filter="url(#caveGlowF)"/>
+          <defs>
+            <radialGradient id="caveDepth" cx="50%" cy="60%" r="50%">
+              <stop offset="0%" stop-color="#0A0500"/>
+              <stop offset="100%" stop-color="#1A0E00"/>
+            </radialGradient>
+            <radialGradient id="caveEyeGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFD060" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#FFD060" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- rocky hillside -->
+          <ellipse cx="45" cy="62" rx="44" ry="16" fill="#2A1A08"/>
+          <ellipse cx="45" cy="60" rx="40" ry="14" fill="#3A2410"/>
+          <!-- cave mouth — jagged arch -->
+          <path d="M14,62 Q10,40 18,28 Q24,18 35,16 Q45,14 55,16 Q66,18 72,28 Q80,40 76,62 Z" fill="url(#caveDepth)"/>
+          <!-- jagged rock teeth top -->
+          <path d="M18,28 L22,38 L27,24 L32,36 L37,20 L42,34 L47,18 L52,32 L57,20 L62,34 L67,24 L72,36 L76,28" fill="none" stroke="#2A1A08" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M18,28 L22,38 L27,24 L32,36 L37,20 L42,34 L47,18 L52,32 L57,20 L62,34 L67,24 L72,36 L76,28" fill="#2A1A08"/>
+          <!-- inner darkness -->
+          <ellipse cx="45" cy="50" rx="24" ry="16" fill="#050200"/>
+          <!-- two glowing eyes in the dark -->
+          <ellipse cx="38" cy="46" rx="5" ry="3" fill="url(#caveEyeGlow)" opacity="0.9"/>
+          <ellipse cx="52" cy="46" rx="5" ry="3" fill="url(#caveEyeGlow)" opacity="0.9"/>
+          <ellipse cx="38" cy="46" rx="2" ry="1.5" fill="#FFD060"/>
+          <ellipse cx="52" cy="46" rx="2" ry="1.5" fill="#FFD060"/>
+          <!-- cave label -->
+          <text x="45" y="74" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="7" fill="rgba(201,187,168,0.5)" letter-spacing="0.1em">GOLLUM'S CAVE</text>
+        </svg>`;
+        document.body.appendChild(cave);
+        requestAnimationFrame(() => { cave.style.opacity = '1'; });
+
+        // --- 5. Gollum leaps off the progress bar and bolts to the cave ---
+        setTimeout(() => {
+          const gRect = pinGollum.getBoundingClientRect();
+          const cRect = cave.getBoundingClientRect();
+
+          const floater = document.createElement('div');
+          floater.innerHTML = pinGollum.innerHTML;
+          floater.style.cssText = [
+            'position:fixed',
+            `left:${gRect.left}px`,
+            `top:${gRect.top}px`,
+            'width:50px',
+            'pointer-events:none',
+            'z-index:301',
+            'transition:left 2s cubic-bezier(0.4,0,1,1), top 2s cubic-bezier(0.4,0,1,1), opacity 0.5s ease',
+          ].join(';');
+          document.body.appendChild(floater);
+
+          pinGollum.style.opacity = '0';
+
+          requestAnimationFrame(() => {
+            const destX = cRect.left + cRect.width  / 2 - 25;
+            const destY = cRect.top  + cRect.height / 2 - 20;
+            floater.style.left = destX + 'px';
+            floater.style.top  = destY + 'px';
+          });
+
+          // --- 6. Arrive: floater fades in, pause, then cave closes ---
+          setTimeout(() => {
+            floater.style.opacity = '0';
+            showToast("🕳 He's gone into the dark. With the Precious.");
+
+            // Hold cave open for 2s before closing
+            setTimeout(() => {
+              cave.style.transition = 'opacity 1.2s ease, transform 1.2s ease';
+              cave.style.transform  = 'translate(-50%,-50%) scaleY(0.08)';
+              cave.style.opacity    = '0';
+
+              setTimeout(() => {
+                floater.remove();
+                cave.remove();
+
+                pinGollum.style.opacity = '1';
+                pinFrodo.style.opacity  = '1';
+                frodoRingCircles.forEach(c => { c.style.opacity = '1'; });
+                ringG.remove();
+                gollumSvg.querySelectorAll('circle[fill="#FFD060"]').forEach(eye => eye.setAttribute('fill', '#88BBFF'));
+                const label = pinGollum.querySelector('.char-label');
+                if (label) label.textContent = 'Gollum';
+                pinGollum.style.transition = 'left 1s linear';
+                pinFrodo.style.transition  = 'left 1s linear';
+                gollumStolen = false;
+              }, 1400);
+            }, 2000);
+          }, 2100);
+        }, 1200);
+      }, 1100);
+    }, 1800);
+  });
+
+  // ── Shire click — potato rain ──
+  document.getElementById('shire-landmark').addEventListener('click', () => {
+    triggerPotatoRain();
+    showToast("🥔 Po-ta-toes! Boil 'em, mash 'em, stick 'em in a stew.");
+  });
+
+  function triggerPotatoRain() {
+    const count = 28;
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        const size = 22 + Math.random() * 18;
+        const startX = Math.random() * 100;
+        const duration = 1.8 + Math.random() * 1.4;
+        const sway = (Math.random() - 0.5) * 120;
+        const spin = (Math.random() < 0.5 ? 1 : -1) * (200 + Math.random() * 300);
+
+        p.style.cssText = [
+          'position:fixed',
+          'top:-60px',
+          `left:${startX}vw`,
+          `width:${size}px`,
+          `height:${size * 0.78}px`,
+          'pointer-events:none',
+          'z-index:500',
+          'font-size:' + Math.round(size) + 'px',
+          'line-height:1',
+          'user-select:none',
+        ].join(';');
+        p.textContent = '🥔';
+
+        document.body.appendChild(p);
+
+        const start = performance.now();
+        const totalMs = duration * 1000;
+
+        function fall(now) {
+          const t = Math.min(1, (now - start) / totalMs);
+          const y = t * (window.innerHeight + 80);
+          const x = sway * Math.sin(t * Math.PI);
+          const rot = spin * t;
+          p.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+          p.style.opacity = t > 0.85 ? (1 - (t - 0.85) / 0.15).toFixed(2) : '1';
+          if (t < 1) requestAnimationFrame(fall);
+          else p.remove();
+        }
+        requestAnimationFrame(fall);
+      }, Math.random() * 1200);
+    }
+  }
+
+
+  const diamond = document.getElementById('easter-diamond');
+  const hintDiv = document.createElement('div');
+  hintDiv.textContent = 'Click the Ring. Click the creatures. Type secret words. There is a secret.';
+  hintDiv.style.cssText = [
+    'position:fixed',
+    'background:rgba(26,8,0,0.97)',
+    'border:1px solid rgba(200,134,10,0.45)',
+    'color:#F5EFE0',
+    'font-family:Share Tech Mono,monospace',
+    'font-size:12px',
+    'letter-spacing:0.08em',
+    'white-space:nowrap',
+    'padding:8px 16px',
+    'pointer-events:none',
+    'opacity:0',
+    'transition:opacity 0.2s ease',
+    'z-index:400',
+    'display:none',
+  ].join(';');
+  document.body.appendChild(hintDiv);
+
+  diamond.addEventListener('mouseenter', () => {
+    const r = diamond.getBoundingClientRect();
+    hintDiv.style.display = 'block';
+    hintDiv.style.left = (r.left + r.width / 2 - hintDiv.offsetWidth / 2) + 'px';
+    hintDiv.style.top  = (r.top - hintDiv.offsetHeight - 10) + 'px';
+    requestAnimationFrame(() => { hintDiv.style.opacity = '1'; });
+  });
+
+  diamond.addEventListener('mouseleave', () => {
+    hintDiv.style.opacity = '0';
+    setTimeout(() => { hintDiv.style.display = 'none'; }, 220);
+  });
+
 </script>
 </body>
 </html>
