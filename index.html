@@ -811,7 +811,7 @@
     additive="sum"/>
 </svg>
 
-<div class="container">
+
 
   <p class="elvish-top">&#9670; &nbsp; One Deadline to Rule Them All &nbsp; &#9670;</p>
 
@@ -1326,7 +1326,9 @@
   // GAP in px between each character; converted to % of track width for CSS left
   const GAP_PX = 36;
 
+  let lockCharacterPositions = false;
   function placeCharacters(pct) {
+    if (lockCharacterPositions) return;
     const w = elTrack.getBoundingClientRect().width || 580;
     const gapPct = (GAP_PX / w) * 100;
     charFrodo .style.left = pct + '%';
@@ -1590,7 +1592,6 @@
 
   requestAnimationFrame(animateShelob);
 
-  // ════════════════════════════════════════════════
   // ── EASTER EGGS ──
   // ════════════════════════════════════════════════
 
@@ -1637,8 +1638,11 @@
 
     setTimeout(() => {
       shriek.classList.remove('active');
-      dim.style.background = 'rgba(0,0,0,0)';
-      setTimeout(() => dim.remove(), 350);
+      setTimeout(() => {
+        dim.style.transition = 'background 0.5s ease';
+        dim.style.background = 'rgba(0,0,0,0)';
+        setTimeout(() => dim.remove(), 550);
+      }, 300);
     }, 2800);
     showToast('☠ The Witch-king has marked you.');
   });
@@ -1707,24 +1711,34 @@
 
     setTimeout(() => {
       overlay.classList.remove('active');
+      showToast("⚡ You shall not miss this deadline.");
     }, 5500);
   }
 
   // ── 5. KEYBOARD CODES ──
   let keyBuffer = '';
   const KEY_CODES = {
-    'SHIRE':  triggerShireMode,
-    'MORDOR': triggerMordorMode,
-    'PASS':   triggerGandalf,
-    'DOOM':   triggerEmberShowerFull,
+    'SHIRE':     triggerShireMode,
+    'MORDOR':    triggerMordorMode,
+    'PASS':      triggerGandalf,
+    'DOOM':      triggerEmberShowerFull,
+    'MORIA':     triggerMoria,
+    'LEGOLAS':   triggerLegolas,
+    'ORC':      triggerOrc,
+    'ROHAN':    triggerRohan,
+    'ARAGORN':   triggerAragorn,
+    'DENETHOR':  triggerDenethor,
+    'SCHWABIE':   triggerShwabie,
+    'EOWYN':     triggerEowyn,
+    'BYRON':     triggerByron,
+    'EYES':      triggerEyes,
   };
 
   document.addEventListener('keydown', (e) => {
-    // Don't capture modifier keys or in inputs
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (e.key.length === 1) {
       keyBuffer += e.key.toUpperCase();
-      if (keyBuffer.length > 8) keyBuffer = keyBuffer.slice(-8);
+      if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
       for (const [code, fn] of Object.entries(KEY_CODES)) {
         if (keyBuffer.endsWith(code)) {
           fn();
@@ -1740,6 +1754,1668 @@
     document.body.classList.remove('mordor-mode');
     showToast("🌿 The Shire is safe. For now.");
     setTimeout(() => document.body.classList.remove('shire-mode'), 8000);
+  }
+
+  // ── MORIA — darkness crashes in, Balrog glow, bridge collapses ──
+  function triggerMoria() {
+    // 1. Slow eerie blackout
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:500;transition:background 2s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.96)'; });
+
+    // 2. Multiple skeletons strewn across the bottom of the screen
+    // Each has slightly different pose, scale, and position
+    const skelConfigs = [
+      // [leftVw, scale, flipX, opacity, rotationDeg]
+      { left: '2vw',  scale: 0.55, flip: false, opacity: 0.7,  rot:  8  },
+      { left: '14vw', scale: 0.65, flip: true,  opacity: 0.85, rot: -12 },
+      { left: '28vw', scale: 0.60, flip: false, opacity: 0.75, rot:  5  },
+      { left: '44vw', scale: 0.70, flip: true,  opacity: 0.9,  rot: -6  },
+      { left: '60vw', scale: 0.58, flip: false, opacity: 0.8,  rot:  15 },
+      { left: '74vw', scale: 0.63, flip: true,  opacity: 0.7,  rot: -10 },
+      { left: '86vw', scale: 0.52, flip: false, opacity: 0.65, rot:  7  },
+    ];
+
+    const skelWraps = [];
+    skelConfigs.forEach((cfg, idx) => {
+      const wrap = document.createElement('div');
+      const scaleX = cfg.flip ? -cfg.scale : cfg.scale;
+      wrap.style.cssText = [
+        'position:fixed', 'bottom:0',
+        `left:${cfg.left}`,
+        `transform:scaleX(${scaleX}) scaleY(${cfg.scale}) rotate(${cfg.rot}deg)`,
+        'transform-origin:bottom center',
+        'pointer-events:none', `z-index:501`,
+        'opacity:0', `transition:opacity ${1.2 + idx * 0.3}s ease`,
+      ].join(';');
+      wrap.innerHTML = `<svg width="180" height="260" viewBox="0 0 180 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="skelGlow${idx}" cx="50%" cy="20%" r="60%">
+            <stop offset="0%"  stop-color="rgba(180,160,130,0.12)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="90" cy="60" rx="70" ry="90" fill="url(#skelGlow${idx})"/>
+        <!-- skull -->
+        <ellipse cx="90" cy="48" rx="34" ry="30" fill="#C8B89A"/>
+        <ellipse cx="90" cy="68" rx="26" ry="18" fill="#BCA888"/>
+        <ellipse cx="76" cy="48" rx="10" ry="11" fill="#1A1208"/>
+        <ellipse cx="104" cy="48" rx="10" ry="11" fill="#1A1208"/>
+        <ellipse cx="76" cy="49" rx="3" ry="3.5" fill="#3A2800" opacity="0.5"/>
+        <ellipse cx="104" cy="49" rx="3" ry="3.5" fill="#3A2800" opacity="0.5"/>
+        <path d="M86,60 L90,54 L94,60 L92,66 L88,66 Z" fill="#1A1208"/>
+        <path d="M66,70 Q68,84 90,86 Q112,84 114,70" fill="#BCA888" stroke="#A89070" stroke-width="0.8"/>
+        <rect x="76" y="78" width="6"  height="8" rx="1" fill="#D8C8AA"/>
+        <rect x="84" y="78" width="6"  height="9" rx="1" fill="#D4C4A6"/>
+        <rect x="92" y="78" width="6"  height="9" rx="1" fill="#D4C4A6"/>
+        <rect x="100" y="78" width="6" height="8" rx="1" fill="#D8C8AA"/>
+        <!-- neck -->
+        <rect x="84" y="86" width="12" height="10" rx="3" fill="#B8A888"/>
+        <!-- spine -->
+        <rect x="87" y="96" width="6" height="80" rx="3" fill="#B8A888"/>
+        <rect x="85" y="100" width="10" height="6" rx="2" fill="#C8B898"/>
+        <rect x="85" y="112" width="10" height="6" rx="2" fill="#C8B898"/>
+        <rect x="85" y="124" width="10" height="6" rx="2" fill="#C8B898"/>
+        <rect x="85" y="136" width="10" height="6" rx="2" fill="#C8B898"/>
+        <rect x="85" y="148" width="10" height="6" rx="2" fill="#C8B898"/>
+        <!-- ribs left -->
+        <path d="M87,104 Q68,108 62,118 Q62,126 72,124 Q80,120 87,116" fill="none" stroke="#C0AA80" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M87,116 Q66,120 60,132 Q60,140 70,138 Q80,134 87,128" fill="none" stroke="#B8A078" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M87,128 Q68,132 64,144 Q64,152 74,150 Q82,146 87,140" fill="none" stroke="#B09878" stroke-width="3"   stroke-linecap="round"/>
+        <path d="M87,140 Q70,144 66,154 Q68,162 78,158 Q84,154 87,150" fill="none" stroke="#A89070" stroke-width="2.8" stroke-linecap="round"/>
+        <!-- ribs right -->
+        <path d="M93,104 Q112,108 118,118 Q118,126 108,124 Q100,120 93,116" fill="none" stroke="#C0AA80" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M93,116 Q114,120 120,132 Q120,140 110,138 Q100,134 93,128" fill="none" stroke="#B8A078" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M93,128 Q112,132 116,144 Q116,152 106,150 Q98,146 93,140" fill="none" stroke="#B09878" stroke-width="3"   stroke-linecap="round"/>
+        <path d="M93,140 Q110,144 114,154 Q112,162 102,158 Q96,154 93,150" fill="none" stroke="#A89070" stroke-width="2.8" stroke-linecap="round"/>
+        <rect x="84" y="100" width="12" height="54" rx="4" fill="#C0AA88" opacity="0.5"/>
+        <!-- pelvis -->
+        <ellipse cx="90" cy="182" rx="30" ry="14" fill="#B8A880"/>
+        <ellipse cx="72" cy="182" rx="12" ry="10" fill="#1A1208" opacity="0.5"/>
+        <ellipse cx="108" cy="182" rx="12" ry="10" fill="#1A1208" opacity="0.5"/>
+        <!-- arms -->
+        <line x1="68" y1="104" x2="44" y2="130" stroke="#C0AA80" stroke-width="7" stroke-linecap="round"/>
+        <line x1="44" y1="130" x2="30" y2="162" stroke="#B8A078" stroke-width="6" stroke-linecap="round"/>
+        <line x1="112" y1="104" x2="136" y2="134" stroke="#C0AA80" stroke-width="7" stroke-linecap="round"/>
+        <line x1="136" y1="134" x2="148" y2="168" stroke="#B8A078" stroke-width="6" stroke-linecap="round"/>
+        <!-- legs -->
+        <line x1="78" y1="192" x2="68" y2="230" stroke="#B8A880" stroke-width="8" stroke-linecap="round"/>
+        <line x1="68" y1="230" x2="60" y2="258" stroke="#B0A078" stroke-width="7" stroke-linecap="round"/>
+        <line x1="102" y1="192" x2="112" y2="228" stroke="#B8A880" stroke-width="8" stroke-linecap="round"/>
+        <line x1="112" y1="228" x2="118" y2="256" stroke="#B0A078" stroke-width="7" stroke-linecap="round"/>
+        <!-- ground shadow -->
+        <ellipse cx="90" cy="258" rx="60" ry="5" fill="rgba(0,0,0,0.4)"/>
+      </svg>`;
+      document.body.appendChild(wrap);
+      skelWraps.push(wrap);
+      // Stagger the fade-in of each skeleton
+      setTimeout(() => { wrap.style.opacity = cfg.opacity; }, 1800 + idx * 200);
+    });
+
+    // 3. Balrog whip cracks across the screen — two strands
+    setTimeout(() => {
+      const whipSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      whipSvg.setAttribute('viewBox', '0 0 100 100');
+      whipSvg.setAttribute('preserveAspectRatio', 'none');
+      whipSvg.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:503;';
+
+      const strand1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      strand1.setAttribute('d', 'M 105,85 C 80,70 60,55 45,35 C 35,22 20,12 -5,8');
+      strand1.setAttribute('fill', 'none');
+      strand1.setAttribute('stroke', '#FF8800');
+      strand1.setAttribute('stroke-width', '1.2');
+      strand1.setAttribute('stroke-linecap', 'round');
+      strand1.setAttribute('opacity', '0');
+
+      const strand2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      strand2.setAttribute('d', 'M 105,90 C 78,76 58,62 40,44 C 28,32 10,24 -5,22');
+      strand2.setAttribute('fill', 'none');
+      strand2.setAttribute('stroke', '#FF5500');
+      strand2.setAttribute('stroke-width', '0.8');
+      strand2.setAttribute('stroke-linecap', 'round');
+      strand2.setAttribute('opacity', '0');
+
+      const glow1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      glow1.setAttribute('d', 'M 105,85 C 80,70 60,55 45,35 C 35,22 20,12 -5,8');
+      glow1.setAttribute('fill', 'none');
+      glow1.setAttribute('stroke', 'rgba(255,180,0,0.3)');
+      glow1.setAttribute('stroke-width', '6');
+      glow1.setAttribute('stroke-linecap', 'round');
+      glow1.setAttribute('opacity', '0');
+
+      const glow2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      glow2.setAttribute('d', 'M 105,90 C 78,76 58,62 40,44 C 28,32 10,24 -5,22');
+      glow2.setAttribute('fill', 'none');
+      glow2.setAttribute('stroke', 'rgba(255,100,0,0.25)');
+      glow2.setAttribute('stroke-width', '5');
+      glow2.setAttribute('stroke-linecap', 'round');
+      glow2.setAttribute('opacity', '0');
+
+      whipSvg.appendChild(glow1);
+      whipSvg.appendChild(glow2);
+      whipSvg.appendChild(strand1);
+      whipSvg.appendChild(strand2);
+      document.body.appendChild(whipSvg);
+
+      requestAnimationFrame(() => {
+        [strand1, strand2, glow1, glow2].forEach(el => el.setAttribute('opacity', '1'));
+        const flash = document.createElement('div');
+        flash.style.cssText = 'position:fixed;inset:0;background:rgba(255,100,0,0.25);pointer-events:none;z-index:502;transition:opacity 0.4s ease;';
+        document.body.appendChild(flash);
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 500); }, 60);
+        setTimeout(() => {
+          [strand1, strand2, glow1, glow2].forEach(el => { el.style.transition = 'opacity 0.5s ease'; el.setAttribute('opacity', '0'); });
+          setTimeout(() => whipSvg.remove(), 600);
+        }, 400);
+      });
+    }, 5000);
+
+    // 4. "FLY, YOU FOOLS!" blazes in after the whip
+    setTimeout(() => {
+      const cry = document.createElement('div');
+      cry.style.cssText = [
+        'position:fixed', 'top:50%', 'left:50%',
+        'transform:translate(-50%,-50%)',
+        'font-family:Cinzel,serif', 'font-weight:600',
+        'font-size:clamp(26px,5.5vw,64px)',
+        'color:#F5EFE0',
+        'text-shadow:0 0 30px rgba(255,255,255,0.6), 0 0 80px rgba(200,150,80,0.4)',
+        'letter-spacing:0.1em', 'text-align:center',
+        'pointer-events:none', 'z-index:504',
+        'opacity:0', 'transition:opacity 0.3s ease',
+        'white-space:nowrap',
+        'background:rgba(0,0,0,0.75)',
+        'padding:0.8rem 2.5rem',
+      ].join(';');
+      cry.innerHTML = 'FILE, YOU FOOLS!<br><span style="font-size:0.38em;letter-spacing:0.2em;font-family:Share Tech Mono,monospace;color:rgba(220,200,160,0.6);">— Gandalf the Grey —</span>';
+      document.body.appendChild(cry);
+      requestAnimationFrame(() => { cry.style.opacity = '1'; });
+
+      setTimeout(() => {
+        cry.style.opacity = '0';
+        skelWraps.forEach(w => { w.style.opacity = '0'; });
+        setTimeout(() => {
+          cry.remove(); skelWraps.forEach(w => w.remove());
+          dim.style.transition = 'background 1.5s ease';
+          dim.style.background = 'rgba(0,0,0,0)';
+          setTimeout(() => {
+            dim.remove();
+            showToast("💀 The mines of Moria. You fear to go into those mines.");
+          }, 1600);
+        }, 600);
+      }, 3000);
+    }, 5600);
+  }
+
+
+  // ── LEGOLAS — arrow volley fires across the screen ──
+  function triggerLegolas() {
+    const count = 12;
+    const colors = ['#C8A860', '#E0C070', '#D4B050', '#B89040'];
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const arrow = document.createElement('div');
+        const y = 10 + Math.random() * 80;
+        const speed = 0.6 + Math.random() * 0.4;
+        const size  = 0.7 + Math.random() * 0.5;
+        arrow.style.cssText = [
+          'position:fixed',
+          `top:${y}vh`,
+          'left:-120px',
+          'pointer-events:none',
+          'z-index:500',
+          `transform:rotate(-4deg) scale(${size})`,
+          `transition:left ${speed}s linear`,
+        ].join(';');
+        arrow.innerHTML = `<svg width="110" height="14" viewBox="0 0 110 14" xmlns="http://www.w3.org/2000/svg">
+          <line x1="10" y1="7" x2="95" y2="7" stroke="${colors[i % colors.length]}" stroke-width="1.5"/>
+          <polygon points="95,3 110,7 95,11" fill="${colors[i % colors.length]}"/>
+          <polygon points="10,7 0,2 6,7 0,12" fill="rgba(180,140,60,0.8)"/>
+          <line x1="10" y1="7" x2="20" y2="4" stroke="rgba(160,120,50,0.6)" stroke-width="1"/>
+          <line x1="10" y1="7" x2="20" y2="10" stroke="rgba(160,120,50,0.6)" stroke-width="1"/>
+          <line x1="0" y1="7" x2="50" y2="7" stroke="rgba(220,180,80,0.15)" stroke-width="3"/>
+        </svg>`;
+        document.body.appendChild(arrow);
+        requestAnimationFrame(() => { arrow.style.left = '110vw'; });
+        setTimeout(() => arrow.remove(), (speed * 1000) + 200);
+      }, i * 80);
+    }
+
+    // Quote appears mid-volley — with dark backdrop
+    setTimeout(() => {
+      const quoteWrap = document.createElement('div');
+      quoteWrap.style.cssText = [
+        'position:fixed', 'top:50%', 'left:50%',
+        'transform:translate(-50%,-50%)',
+        'background:rgba(0,0,0,0.88)',
+        'border:1px solid rgba(200,160,60,0.35)',
+        'padding:22px 40px',
+        'text-align:center', 'pointer-events:none', 'z-index:501',
+        'opacity:0', 'transition:opacity 0.4s ease',
+        'white-space:nowrap',
+      ].join(';');
+
+      quoteWrap.innerHTML = `
+        <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:clamp(15px,2.2vw,24px);color:#F5D87A;text-shadow:0 0 16px rgba(200,160,60,0.7);margin-bottom:8px;">
+          "That still only counts as one."
+        </div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.12em;color:rgba(200,170,100,0.55);">
+          — Legolas Greenleaf, whose hair remained perfect throughout
+        </div>`;
+
+      document.body.appendChild(quoteWrap);
+      requestAnimationFrame(() => { quoteWrap.style.opacity = '1'; });
+      setTimeout(() => {
+        quoteWrap.style.opacity = '0';
+        setTimeout(() => {
+          quoteWrap.remove();
+          showToast("🏹 12 arrows. One kill. Zero split ends.");
+        }, 500);
+      }, 3200);
+    }, 500);
+  }
+
+  // ── GALADRIEL — silver-blue mirror wash, whispered vision ──
+  // ── ORC — blackout, then "KEEP PUSHING, MAN FILTH!" ──
+  function triggerOrc() {
+    if (!document.getElementById('orc-style')) {
+      const s = document.createElement('style');
+      s.id = 'orc-style';
+      s.textContent = `
+        @keyframes orcTextIn {
+          0%   { transform: translate(-50%,-50%) scale(0.7) rotate(-4deg); opacity: 0; }
+          60%  { transform: translate(-50%,-50%) scale(1.06) rotate(1deg); opacity: 1; }
+          100% { transform: translate(-50%,-50%) scale(1) rotate(-1deg); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Blackout
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:500;transition:background 0.7s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.97)'; });
+
+    // 2. Brutal text slams in
+    setTimeout(() => {
+      const orcText = document.createElement('div');
+      orcText.style.cssText = [
+        'position:fixed', 'top:50%', 'left:50%',
+        'transform:translate(-50%,-50%) scale(0.7) rotate(-4deg)',
+        'pointer-events:none', 'z-index:502',
+        'opacity:0',
+        'animation:orcTextIn 0.5s cubic-bezier(0.2,0,0.5,1) forwards',
+        'text-align:center',
+      ].join(';');
+
+      orcText.innerHTML = `
+        <div style="
+          font-family:Cinzel,serif;
+          font-weight:600;
+          font-size:clamp(28px,6vw,72px);
+          color:#CC1100;
+          text-shadow:0 0 20px rgba(200,0,0,0.9), 0 0 60px rgba(150,0,0,0.6), 4px 4px 0px #440000;
+          letter-spacing:0.06em;
+          line-height:1.3;
+          -webkit-text-stroke:1px #880000;
+        ">KEEP PUSHING,<br>MAN FILTH!</div>
+        <div style="
+          font-family:Share Tech Mono,monospace;
+          font-size:clamp(11px,1.4vw,16px);
+          color:rgba(180,40,0,0.7);
+          letter-spacing:0.18em;
+          margin-top:14px;
+        ">— Lurtz, Uruk-hai Commander —</div>`;
+
+      document.body.appendChild(orcText);
+
+      // 3. Hold, then fade out
+      setTimeout(() => {
+        orcText.style.transition = 'opacity 1s ease';
+        orcText.style.opacity = '0';
+        setTimeout(() => {
+          orcText.remove();
+          dim.style.transition = 'background 1.2s ease';
+          dim.style.background = 'rgba(0,0,0,0)';
+          setTimeout(() => {
+            dim.remove();
+            showToast("🖐 The Uruk-hai demand faster submissions.");
+          }, 1300);
+        }, 1100);
+      }, 3000);
+    }, 800);
+  }
+
+  // ── ENT — page shudders, slow booming text ──
+  // ── ROHAN — beacons light, call for aid, cavalry charges ──
+  function triggerRohan() {
+    // Add keyframes if not present
+    if (!document.getElementById('rohan-style')) {
+      const s = document.createElement('style');
+      s.id = 'rohan-style';
+      s.textContent = `
+        @keyframes beaconGlow {
+          0%,100% { filter: drop-shadow(0 0 8px rgba(255,160,0,0.9)) drop-shadow(0 0 20px rgba(255,100,0,0.6)); }
+          50%      { filter: drop-shadow(0 0 16px rgba(255,200,0,1)) drop-shadow(0 0 40px rgba(255,140,0,0.8)); }
+        }
+        @keyframes rohanHorseRun {
+          from { left: -120px; }
+          to   { left: 110vw; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // Slight dark overlay to make beacons pop
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:498;transition:background 1s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.55)'; });
+
+    // 1. Beacon towers — 6 scattered around the page, light up in sequence
+    // [leftVw, topVh]
+    const beaconPositions = [
+      [8,  70], [22, 30], [38, 60], [54, 25], [70, 55], [85, 20],
+    ];
+
+    const beaconEls = [];
+    beaconPositions.forEach(([lv, tv], idx) => {
+      const b = document.createElement('div');
+      b.style.cssText = [
+        'position:fixed',
+        `left:${lv}vw`, `top:${tv}vh`,
+        'transform:translate(-50%,-100%)',
+        'pointer-events:none', 'z-index:499',
+        'opacity:0', 'transition:opacity 0.3s ease',
+      ].join(';');
+
+      b.innerHTML = `<svg width="48" height="90" viewBox="0 0 48 90" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+        <!-- tower base -->
+        <rect x="16" y="50" width="16" height="38" rx="2" fill="#5A4A30"/>
+        <rect x="14" y="48" width="20" height="6"  rx="1" fill="#6A5A38"/>
+        <!-- battlements -->
+        <rect x="14" y="42" width="5"  height="8" rx="1" fill="#5A4A30"/>
+        <rect x="22" y="42" width="5"  height="8" rx="1" fill="#5A4A30"/>
+        <rect x="30" y="42" width="5"  height="8" rx="1" fill="#5A4A30"/>
+        <!-- torch bowl on top -->
+        <ellipse cx="24" cy="42" rx="8" ry="4" fill="#3A2A10"/>
+        <ellipse cx="24" cy="41" rx="6" ry="3" fill="#2A1A08"/>
+        <!-- unlit flame placeholder -->
+        <g class="beacon-flame-${idx}" opacity="0">
+          <!-- outer flame -->
+          <ellipse cx="24" cy="34" rx="8" ry="10" fill="#FF8800" opacity="0.7"/>
+          <ellipse cx="24" cy="30" rx="6" ry="8"  fill="#FFCC00" opacity="0.8"/>
+          <ellipse cx="24" cy="26" rx="4" ry="6"  fill="#FFFFFF" opacity="0.6"/>
+          <!-- glow halo -->
+          <ellipse cx="24" cy="32" rx="16" ry="14" fill="rgba(255,160,0,0.2)"/>
+          <ellipse cx="24" cy="32" rx="24" ry="20" fill="rgba(255,100,0,0.1)"/>
+        </g>
+        <!-- ground shadow -->
+        <ellipse cx="24" cy="88" rx="12" ry="3" fill="rgba(0,0,0,0.3)"/>
+      </svg>`;
+
+      document.body.appendChild(b);
+      beaconEls.push(b);
+
+      // Fade in tower, then light the flame with a stagger
+      setTimeout(() => {
+        b.style.opacity = '1';
+        setTimeout(() => {
+          const flame = b.querySelector(`.beacon-flame-${idx}`);
+          if (flame) {
+            flame.style.transition = 'opacity 0.4s ease';
+            flame.style.opacity = '1';
+            flame.style.animation = 'beaconGlow 1.2s ease-in-out infinite';
+          }
+          // Small flash when beacon lights
+          const flash = document.createElement('div');
+          flash.style.cssText = `position:fixed;left:${lv}vw;top:${tv}vh;width:60px;height:60px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(255,180,0,0.4);pointer-events:none;z-index:500;transition:opacity 0.5s ease;`;
+          document.body.appendChild(flash);
+          setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 600); }, 80);
+        }, 400);
+      }, idx * 500);
+    });
+
+    // 2. "THE CLIENT CALLS FOR AID!" fades in after last beacon lights
+    const callText = document.createElement('div');
+    callText.style.cssText = [
+      'position:fixed', 'top:38%', 'left:50%',
+      'transform:translate(-50%,-50%)',
+      'font-family:Cinzel,serif', 'font-weight:600',
+      'font-size:clamp(20px,4vw,50px)',
+      'color:#F5D87A',
+      'text-shadow:0 0 30px rgba(240,180,30,0.8), 0 0 70px rgba(200,120,0,0.5)',
+      'letter-spacing:0.1em', 'text-align:center',
+      'pointer-events:none', 'z-index:501',
+      'opacity:0', 'transition:opacity 0.8s ease',
+      'white-space:nowrap',
+    ].join(';');
+    callText.textContent = 'THE CLIENT CALLS FOR AID!';
+    document.body.appendChild(callText);
+    setTimeout(() => { callText.style.opacity = '1'; }, 3200);
+
+    // 3. Cavalry charge across the bottom — riders gallop left to right
+    const riderCount = 10;
+    setTimeout(() => {
+      for (let i = 0; i < riderCount; i++) {
+        setTimeout(() => {
+          const rider = document.createElement('div');
+          const yOff = -2 + Math.random() * 14; // slight vertical scatter
+          const speed = 3.8 + Math.random() * 1.2;
+          const scale = 0.75 + Math.random() * 0.35;
+          rider.style.cssText = [
+            'position:fixed',
+            `bottom:${yOff}vh`,
+            'left:-120px',
+            'pointer-events:none', 'z-index:502',
+            `animation:rohanHorseRun ${speed}s cubic-bezier(0.3,0,0.7,1) forwards`,
+          ].join(';');
+
+          rider.innerHTML = `<svg width="90" height="70" viewBox="0 0 90 70"
+              xmlns="http://www.w3.org/2000/svg"
+              style="transform:scale(${scale});transform-origin:left bottom;">
+            <!-- horse body -->
+            <ellipse cx="44" cy="44" rx="28" ry="14" fill="#6B4A28"/>
+            <!-- horse neck -->
+            <path d="M62,36 Q70,22 72,16 Q68,14 64,18 Q60,26 58,36Z" fill="#7A5530"/>
+            <!-- horse head -->
+            <ellipse cx="72" cy="13" rx="10" ry="7" fill="#7A5530" transform="rotate(-20 72 13)"/>
+            <!-- horse ear -->
+            <path d="M76,8 L78,3 L80,7Z" fill="#6A4A28"/>
+            <!-- horse eye -->
+            <circle cx="75" cy="11" r="1.5" fill="#1A0E06"/>
+            <!-- horse mane -->
+            <path d="M64,18 Q66,12 68,8 Q70,12 68,16 Q70,10 72,8 Q72,14 70,18" fill="#3A2010"/>
+            <!-- horse legs — mid gallop -->
+            <line x1="30" y1="56" x2="24" y2="70" stroke="#5A3A18" stroke-width="4" stroke-linecap="round"/>
+            <line x1="38" y1="58" x2="34" y2="70" stroke="#5A3A18" stroke-width="4" stroke-linecap="round"/>
+            <line x1="50" y1="58" x2="54" y2="70" stroke="#5A3A18" stroke-width="4" stroke-linecap="round"/>
+            <line x1="58" y1="56" x2="66" y2="68" stroke="#5A3A18" stroke-width="4" stroke-linecap="round"/>
+            <!-- horse tail -->
+            <path d="M18,40 Q8,38 4,46 Q8,50 16,48 Q10,52 8,58" fill="none" stroke="#4A2E10" stroke-width="3" stroke-linecap="round"/>
+            <!-- rider body -->
+            <ellipse cx="48" cy="28" rx="9" ry="12" fill="#8B6020"/>
+            <!-- rider head -->
+            <circle cx="48" cy="16" r="7" fill="#C8A068"/>
+            <!-- helmet -->
+            <path d="M41,16 Q42,8 48,7 Q54,8 55,16 Q52,12 48,12 Q44,12 41,16Z" fill="#8B7040"/>
+            <rect x="41" y="14" width="14" height="3" rx="1" fill="#7A6030"/>
+            <!-- rider spear -->
+            <line x1="62" y1="4" x2="46" y2="40" stroke="#8B6A30" stroke-width="2" stroke-linecap="round"/>
+            <polygon points="62,4 60,10 64,10" fill="#C0A060"/>
+            <!-- rider cloak -->
+            <path d="M40,28 Q32,34 30,44 Q36,42 42,36Z" fill="#7A4A10" opacity="0.8"/>
+            <!-- shield -->
+            <ellipse cx="40" cy="32" rx="7" ry="8" fill="#8B6020" stroke="#C0A050" stroke-width="1"/>
+            <line x1="40" y1="25" x2="40" y2="39" stroke="#C0A050" stroke-width="0.8"/>
+            <line x1="34" y1="32" x2="46" y2="32" stroke="#C0A050" stroke-width="0.8"/>
+            <!-- ground dust -->
+            <ellipse cx="44" cy="70" rx="20" ry="3" fill="rgba(180,140,80,0.25)"/>
+          </svg>`;
+
+          document.body.appendChild(rider);
+          setTimeout(() => rider.remove(), (speed * 1000) + 800);
+        }, i * 160);
+      }
+    }, 4200);
+
+    // 4. Text changes to "AND OUR BID TEAM WILL ANSWER!" mid-charge
+    setTimeout(() => {
+      callText.style.transition = 'opacity 0.4s ease';
+      callText.style.opacity = '0';
+      setTimeout(() => {
+        callText.textContent = 'AND OUR BID TEAM WILL ANSWER!';
+        callText.style.color = '#FF9922';
+        callText.style.textShadow = '0 0 30px rgba(255,140,0,0.9), 0 0 70px rgba(220,80,0,0.5)';
+        callText.style.opacity = '1';
+      }, 450);
+    }, 5400);
+
+    // 5. Fade everything out, then show toast
+    setTimeout(() => {
+      callText.style.opacity = '0';
+      beaconEls.forEach(b => { b.style.opacity = '0'; });
+      dim.style.background = 'rgba(0,0,0,0)';
+      setTimeout(() => {
+        callText.remove();
+        beaconEls.forEach(b => b.remove());
+        dim.remove();
+        showToast("🐴 Rohan has heard the call. The bid team rides at dawn.", 5000);
+      }, 1200);
+    }, 10500);
+  }
+
+  // ── ARAGORN — rallying war cry, *"It is not this day"* ──
+  function triggerAragorn() {
+    // 1. Dark dramatic overlay
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:500;transition:background 0.5s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.78)'; });
+
+    // 2. Build-up text — the speech
+    const speech = document.createElement('div');
+    speech.style.cssText = [
+      'position:fixed', 'top:50%', 'left:50%',
+      'transform:translate(-50%,-52%)',
+      'font-family:IM Fell English,serif', 'font-style:italic',
+      'font-size:clamp(18px,2.8vw,32px)',
+      'color:rgba(230,210,170,1)',
+      'text-align:center', 'line-height:1.9',
+      'letter-spacing:0.04em',
+      'pointer-events:none', 'z-index:501',
+      'opacity:0', 'transition:opacity 1s ease',
+      'max-width:700px', 'padding:1.2rem 2.5rem',
+      'background:rgba(0,0,0,0.72)',
+      'border:1px solid rgba(200,160,80,0.15)',
+    ].join(';');
+    speech.innerHTML = `
+      <span style="color:rgba(210,185,140,0.95);font-size:1em;">There may come a day when the courage of actuaries fails,</span><br>
+      <span style="color:rgba(210,185,140,0.95);font-size:1em;">when we forsake our bids and break all fellowship with CMS.</span><br><br>
+      <span style="color:#F5EFE0;font-size:1.15em;text-shadow:0 0 20px rgba(255,240,200,0.5);">But it is not this day.</span>
+    `;
+    document.body.appendChild(speech);
+    setTimeout(() => { speech.style.opacity = '1'; }, 600);
+
+    // 3. After the speech builds — the war cry blazes in
+    const cry = document.createElement('div');
+    cry.style.cssText = [
+      'position:fixed', 'bottom:18vh', 'left:50%',
+      'transform:translateX(-50%) scale(0.7)',
+      'font-family:Cinzel,serif', 'font-weight:600',
+      'font-size:clamp(24px,5vw,58px)',
+      'color:#F5D87A',
+      'text-shadow:0 0 30px rgba(240,166,35,0.9), 0 0 80px rgba(200,120,10,0.5)',
+      'letter-spacing:0.1em', 'text-align:center',
+      'pointer-events:none', 'z-index:502',
+      'opacity:0', 'transition:opacity 0.3s ease, transform 0.3s ease',
+      'white-space:nowrap',
+      'background:rgba(0,0,0,0.65)',
+      'padding:0.6rem 2rem',
+    ].join(';');
+    cry.textContent = 'FOR THE FILING DEADLINE!';
+    document.body.appendChild(cry);
+    setTimeout(() => {
+      cry.style.opacity = '1';
+      cry.style.transform = 'translateX(-50%) scale(1)';
+      // flash
+      const flash = document.createElement('div');
+      flash.style.cssText = 'position:fixed;inset:0;background:rgba(240,166,35,0.15);pointer-events:none;z-index:499;transition:opacity 0.8s ease;';
+      document.body.appendChild(flash);
+      setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 900); }, 100);
+    }, 3200);
+
+    // 4. Fade out
+    setTimeout(() => { speech.style.opacity = '0'; cry.style.opacity = '0'; }, 6500);
+    setTimeout(() => { dim.style.background = 'rgba(0,0,0,0)'; }, 7000);
+    setTimeout(() => {
+      dim.remove(); speech.remove(); cry.remove();
+      showToast("⚔️ Aragorn rallies the actuaries of Middle-earth.");
+    }, 7800);
+  }
+
+  // ── DENETHOR — tomatoes, candlelight, flames, and a mad sprint ──
+  function triggerDenethor() {
+    // Inject keyframes
+    if (!document.getElementById('denethor-style')) {
+      const s = document.createElement('style');
+      s.id = 'denethor-style';
+      s.textContent = `
+        @keyframes candleFlicker {
+          0%,100% { opacity: 0.55; }
+          25%      { opacity: 0.7; }
+          50%      { opacity: 0.45; }
+          75%      { opacity: 0.65; }
+        }
+        @keyframes denethorRun {
+          from { left: -140px; }
+          to   { left: 110vw; }
+        }
+        @keyframes juiceDrip {
+          0%   { height: 0px; opacity: 0.9; }
+          80%  { opacity: 0.85; }
+          100% { height: 85vh; opacity: 0; }
+        }
+        @keyframes seedFall {
+          0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(80vh) rotate(720deg); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Candlelit orange flicker
+    const candle = document.createElement('div');
+    candle.style.cssText = [
+      'position:fixed', 'inset:0',
+      'background:rgba(180,80,0,0)',
+      'pointer-events:all', 'z-index:500',
+      'transition:background 1.2s ease',
+    ].join(';');
+    document.body.appendChild(candle);
+    requestAnimationFrame(() => {
+      candle.style.background = 'rgba(160,60,0,0.28)';
+      candle.style.animation  = 'candleFlicker 0.4s ease-in-out infinite';
+    });
+
+    // 2. Single large tomato appears center screen
+    const tomatoWrap = document.createElement('div');
+    tomatoWrap.style.cssText = [
+      'position:fixed', 'top:50%', 'left:50%',
+      'transform:translate(-50%,-50%)',
+      'pointer-events:none', 'z-index:502',
+      'opacity:0', 'transition:opacity 0.5s ease',
+    ].join(';');
+
+    tomatoWrap.innerHTML = `<svg id="denethor-tomato" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tomatoGrad" cx="38%" cy="32%" r="65%">
+          <stop offset="0%"   stop-color="#FF6644"/>
+          <stop offset="50%"  stop-color="#E82200"/>
+          <stop offset="100%" stop-color="#AA1400"/>
+        </radialGradient>
+        <radialGradient id="tomatoInner" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#FF4422" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#CC1100" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="tomatoClip">
+          <circle cx="90" cy="96" r="72"/>
+        </clipPath>
+      </defs>
+      <!-- stem -->
+      <path d="M90,28 Q86,20 80,16 Q84,24 82,30" fill="none" stroke="#2A6010" stroke-width="3" stroke-linecap="round"/>
+      <path d="M90,28 Q94,18 100,15 Q96,24 94,30" fill="none" stroke="#2A6010" stroke-width="3" stroke-linecap="round"/>
+      <path d="M90,28 Q90,18 90,14" fill="none" stroke="#2A6010" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="90" cy="30" rx="10" ry="5" fill="#3A7A18"/>
+      <!-- main tomato body -->
+      <circle cx="90" cy="96" r="72" fill="url(#tomatoGrad)"/>
+      <!-- highlight -->
+      <ellipse cx="68" cy="68" rx="18" ry="12" fill="rgba(255,180,140,0.35)" transform="rotate(-30 68 68)"/>
+      <!-- inner flesh lines -->
+      <line x1="90" y1="30" x2="90" y2="165" stroke="rgba(180,30,0,0.15)" stroke-width="2"/>
+      <line x1="30" y1="96" x2="160" y2="96" stroke="rgba(180,30,0,0.12)" stroke-width="2"/>
+      <!-- bite mark — chunk missing from upper right -->
+      <path id="bite-mark" d="M 130,50 Q 155,55 162,75 Q 168,95 158,110 Q 150,95 138,80 Q 125,65 118,55 Z"
+            fill="#1A0800" clip-path="url(#tomatoClip)" opacity="0"/>
+      <!-- seeds visible in bite area -->
+      <g id="bite-seeds" opacity="0">
+        <ellipse cx="142" cy="72" rx="4" ry="2.5" fill="#F0C060" transform="rotate(-20 142 72)"/>
+        <ellipse cx="150" cy="85" rx="4" ry="2.5" fill="#E8B850" transform="rotate(10 150 85)"/>
+        <ellipse cx="135" cy="82" rx="3.5" ry="2" fill="#F0C060" transform="rotate(-35 135 82)"/>
+        <ellipse cx="148" cy="68" rx="3" ry="2" fill="#E8C060" transform="rotate(15 148 68)"/>
+      </g>
+      <!-- juice spray from bite -->
+      <g id="juice-spray" opacity="0">
+        <path d="M 148,65 L 168,48 L 165,55 L 175,42" fill="none" stroke="#CC2200" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 155,78 L 178,72 L 172,78" fill="none" stroke="#CC2200" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 150,60 L 166,40" fill="none" stroke="#DD3300" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="168" cy="47" r="3" fill="#CC2200" opacity="0.8"/>
+        <circle cx="176" cy="42" r="2" fill="#CC2200" opacity="0.7"/>
+        <circle cx="179" cy="72" r="2.5" fill="#BB1100" opacity="0.8"/>
+      </g>
+    </svg>`;
+
+    document.body.appendChild(tomatoWrap);
+    setTimeout(() => { tomatoWrap.style.opacity = '1'; }, 300);
+
+    // 3. Bite animation — chunk disappears, juice sprays
+    setTimeout(() => {
+      const bite   = document.getElementById('bite-mark');
+      const seeds  = document.getElementById('bite-seeds');
+      const spray  = document.getElementById('juice-spray');
+      if (bite)  { bite.style.transition  = 'opacity 0.1s'; bite.style.opacity  = '1'; }
+      if (seeds) { seeds.style.transition = 'opacity 0.2s'; seeds.style.opacity = '1'; }
+      if (spray) { spray.style.transition = 'opacity 0.15s'; spray.style.opacity = '1';
+        setTimeout(() => { spray.style.opacity = '0'; }, 600); }
+
+      // 4. Juice and seeds drip down the screen
+      setTimeout(() => {
+        const NS = 'http://www.w3.org/2000/svg';
+        const drips = 14;
+        for (let i = 0; i < drips; i++) {
+          setTimeout(() => {
+            const x = 25 + Math.random() * 55; // % across screen
+            const width = 3 + Math.random() * 8;
+            const delay = Math.random() * 0.4;
+            const dur   = 2.5 + Math.random() * 2;
+
+            // Juice streak
+            const streak = document.createElement('div');
+            streak.style.cssText = [
+              'position:fixed',
+              `left:${x}vw`,
+              'top:0',
+              `width:${width}px`,
+              'height:0px',
+              'border-radius:0 0 40% 40%',
+              `background:linear-gradient(180deg, #CC2200 0%, #AA1100 60%, rgba(150,10,0,0) 100%)`,
+              'pointer-events:none', 'z-index:503',
+              `animation:juiceDrip ${dur}s ${delay}s ease-in forwards`,
+              'opacity:0.9',
+            ].join(';');
+            document.body.appendChild(streak);
+            setTimeout(() => streak.remove(), (dur + delay) * 1000 + 200);
+
+            // Seed
+            if (Math.random() < 0.6) {
+              const seed = document.createElement('div');
+              seed.style.cssText = [
+                'position:fixed',
+                `left:${x + (Math.random()-0.5)*6}vw`,
+                'top:5vh',
+                'width:8px', 'height:5px',
+                'background:#E8B840',
+                'border-radius:50%',
+                'pointer-events:none', 'z-index:503',
+                `animation:seedFall ${dur * 0.8}s ${delay}s ease-in forwards`,
+              ].join(';');
+              document.body.appendChild(seed);
+              setTimeout(() => seed.remove(), (dur + delay) * 1000 + 200);
+            }
+          }, i * 100);
+        }
+
+        // Tomato fades out after drips start
+        setTimeout(() => {
+          tomatoWrap.style.opacity = '0';
+          setTimeout(() => tomatoWrap.remove(), 600);
+        }, 1800);
+      }, 500);
+    }, 1400);
+
+    // 5. Flames crawl up from the bottom
+    setTimeout(() => {
+      const flameLayer = document.createElement('div');
+      flameLayer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:502;overflow:hidden;';
+      document.body.appendChild(flameLayer);
+
+      const flameSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      flameSvg.setAttribute('width', '100%');
+      flameSvg.setAttribute('height', '100%');
+      flameSvg.setAttribute('preserveAspectRatio', 'none');
+      flameSvg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
+      flameLayer.appendChild(flameSvg);
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%"  stop-color="#FF2200" stop-opacity="0.95"/>
+          <stop offset="40%" stop-color="#FF7700" stop-opacity="0.85"/>
+          <stop offset="75%" stop-color="#FFCC00" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#FFEE88" stop-opacity="0"/>
+        </linearGradient>
+      `;
+      flameSvg.appendChild(defs);
+
+      const FLAME_MS = 5500;
+      const flameStart = performance.now();
+      const cols = 18;
+
+      function drawFlames(now) {
+        const ft = Math.min(1, (now - flameStart) / FLAME_MS);
+        while (flameSvg.children.length > 1) flameSvg.removeChild(flameSvg.lastChild);
+        const W = window.innerWidth, H = window.innerHeight;
+        const colW = W / cols;
+        for (let c = 0; c < cols; c++) {
+          const phase = (c * 0.37 + now * 0.002) % (Math.PI * 2);
+          const heightFraction = ft * (0.7 + 0.35 * Math.sin(phase)) * (1 + 0.15 * Math.sin(phase * 2.3));
+          const flameH = H * Math.min(1, heightFraction);
+          const segments = 6;
+          const segW = colW / segments;
+          let d = `M ${c * colW},${H} `;
+          for (let s = 0; s <= segments; s++) {
+            const x = c * colW + s * segW;
+            const flicker = Math.sin(phase + s * 0.8 + now * 0.004) * (flameH * 0.18);
+            const y = H - flameH + flicker;
+            d += `L ${x.toFixed(1)},${y.toFixed(1)} `;
+          }
+          d += `L ${(c + 1) * colW},${H} Z`;
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', d);
+          path.setAttribute('fill', 'url(#flameGrad)');
+          path.setAttribute('opacity', (0.7 + 0.3 * Math.sin(phase)).toFixed(2));
+          flameSvg.appendChild(path);
+        }
+        if (ft < 1) requestAnimationFrame(drawFlames);
+      }
+      requestAnimationFrame(drawFlames);
+
+      // 6. Denethor SVG figure runs across on fire
+      setTimeout(() => {
+        const runner = document.createElement('div');
+        runner.style.cssText = [
+          'position:fixed', 'bottom:8vh', 'left:-80px',
+          'font-size:44px', 'pointer-events:none', 'z-index:504',
+          'filter:drop-shadow(0 0 8px rgba(255,100,0,0.9)) drop-shadow(0 0 20px rgba(255,50,0,0.7))',
+          'animation:denethorRun 5s cubic-bezier(0.2,0,0.6,1) forwards',
+        ].join(';');
+        runner.textContent = '🧙';
+        document.body.appendChild(runner);
+
+        // Trailing flame div
+        const trailFlame = document.createElement('div');
+        trailFlame.style.cssText = [
+          'position:fixed', 'bottom:8vh', 'left:-80px',
+          'pointer-events:none', 'z-index:503',
+          'animation:denethorRun 5s cubic-bezier(0.2,0,0.6,1) forwards',
+          'animation-delay:0.18s',
+          'opacity:0.7', 'font-size:36px',
+        ].join(';');
+        trailFlame.textContent = '🔥';
+        document.body.appendChild(trailFlame);
+
+        const runDur = 5100;
+        setTimeout(() => { runner.remove(); trailFlame.remove(); }, runDur);
+      }, 2800);
+
+      // 7. Flames die down, reset, toast at end
+      setTimeout(() => {
+        flameLayer.style.transition = 'opacity 2s ease';
+        flameLayer.style.opacity = '0';
+        setTimeout(() => {
+          flameLayer.remove();
+          candle.style.animation = 'none';
+          candle.style.transition = 'background 2s ease';
+          candle.style.background = 'rgba(0,0,0,0)';
+          setTimeout(() => {
+            candle.remove();
+            showToast("🔥 He has lost his mind. And his tomatoes.");
+          }, 2200);
+        }, 2100);
+      }, 8200);
+
+    }, 2800);
+  }
+
+
+  // ── SCHWABIE — sirens, deadline warning, wall of water crashes down ──
+  function triggerShwabie() {
+    if (!document.getElementById('shwabie-style')) {
+      const s = document.createElement('style');
+      s.id = 'shwabie-style';
+      s.textContent = `
+        @keyframes sirenSpin {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes sirenFlash {
+          0%,49% { opacity: 1; }
+          50%,100% { opacity: 0.15; }
+        }
+        @keyframes shwabieTextPulse {
+          0%,100% { text-shadow: 0 0 20px rgba(255,40,0,0.9), 0 0 60px rgba(200,0,0,0.6), 4px 4px 0px #440000; }
+          50%      { text-shadow: 0 0 40px rgba(255,80,0,1),   0 0 100px rgba(220,0,0,0.9), 4px 4px 0px #440000; }
+        }
+        @keyframes waterCrash {
+          0%   { top: -100vh; }
+          100% { top: 0; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Blackout
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:500;transition:background 0.6s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.96)'; });
+
+    // 2. Two alarm sirens — left and right sides
+    const sirenData = [
+      { left: '22vw' },
+      { left: '68vw' },
+    ];
+
+    const sirenEls = [];
+    sirenData.forEach(({ left }) => {
+      const siren = document.createElement('div');
+      siren.style.cssText = [
+        'position:fixed', 'top:12vh', `left:${left}`,
+        'transform:translateX(-50%)',
+        'pointer-events:none', 'z-index:501',
+        'opacity:0', 'transition:opacity 0.4s ease',
+      ].join(';');
+
+      siren.innerHTML = `<svg width="100" height="140" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- housing base -->
+        <rect x="20" y="80" width="60" height="50" rx="6" fill="#222"/>
+        <rect x="24" y="84" width="52" height="42" rx="4" fill="#1A1A1A"/>
+        <!-- mounting bolts -->
+        <circle cx="28" cy="88" r="3" fill="#333"/>
+        <circle cx="72" cy="88" r="3" fill="#333"/>
+        <circle cx="28" cy="122" r="3" fill="#333"/>
+        <circle cx="72" cy="122" r="3" fill="#333"/>
+        <!-- dome housing -->
+        <ellipse cx="50" cy="80" rx="32" ry="12" fill="#2A2A2A"/>
+        <ellipse cx="50" cy="78" rx="30" ry="11" fill="#222"/>
+        <!-- dome glass -->
+        <ellipse cx="50" cy="72" rx="28" ry="28" fill="#330000"/>
+        <ellipse cx="50" cy="72" rx="28" ry="28" fill="none" stroke="#111" stroke-width="3"/>
+        <!-- flashing red light inside dome -->
+        <ellipse cx="50" cy="72" rx="22" ry="22" fill="#CC0000" style="animation:sirenFlash 0.5s ease-in-out infinite"/>
+        <ellipse cx="50" cy="72" rx="14" ry="14" fill="#FF2200" style="animation:sirenFlash 0.5s ease-in-out infinite"/>
+        <ellipse cx="50" cy="72" rx="7"  ry="7"  fill="#FF6644" style="animation:sirenFlash 0.5s ease-in-out infinite"/>
+        <!-- rotating beam sweep -->
+        <g style="transform-origin:50px 72px;animation:sirenSpin 0.6s linear infinite">
+          <path d="M50,72 L50,44 Q58,50 66,72 Z" fill="rgba(255,60,0,0.6)"/>
+        </g>
+        <!-- dome highlight -->
+        <ellipse cx="40" cy="58" rx="8" ry="5" fill="rgba(255,180,150,0.15)" transform="rotate(-30 40 58)"/>
+        <!-- glow halo under dome -->
+        <ellipse cx="50" cy="80" rx="38" ry="10" fill="rgba(200,0,0,0.25)" style="animation:sirenFlash 0.5s ease-in-out infinite"/>
+        <!-- base label stripe -->
+        <rect x="20" y="100" width="60" height="8" rx="0" fill="#CC0000" opacity="0.7"/>
+      </svg>`;
+
+      document.body.appendChild(siren);
+      sirenEls.push(siren);
+      setTimeout(() => { siren.style.opacity = '1'; }, 600);
+    });
+
+    // Red flash overlay synced to sirens
+    const flashOverlay = document.createElement('div');
+    flashOverlay.style.cssText = [
+      'position:fixed', 'inset:0',
+      'background:rgba(180,0,0,0)',
+      'pointer-events:none', 'z-index:500',
+      'animation:sirenFlash 0.5s ease-in-out infinite',
+    ].join(';');
+    // subtle — just a tint
+    flashOverlay.style.background = 'rgba(140,0,0,0.12)';
+    document.body.appendChild(flashOverlay);
+
+    // 3. Quote slams in
+    const quote = document.createElement('div');
+    quote.style.cssText = [
+      'position:fixed', 'top:50%', 'left:50%',
+      'transform:translate(-50%,-50%)',
+      'text-align:center',
+      'pointer-events:none', 'z-index:502',
+      'opacity:0', 'transition:opacity 0.5s ease',
+    ].join(';');
+    quote.innerHTML = `
+      <div style="
+        font-family:Cinzel,serif;
+        font-weight:600;
+        font-size:clamp(26px,5.5vw,68px);
+        color:#FF2200;
+        text-shadow:0 0 20px rgba(255,40,0,0.9), 0 0 60px rgba(200,0,0,0.6), 4px 4px 0px #440000;
+        letter-spacing:0.08em;
+        line-height:1.25;
+        -webkit-text-stroke:1px #990000;
+        animation:shwabieTextPulse 0.5s ease-in-out infinite;
+        white-space:nowrap;
+      ">THE DEADLINE IS<br>'COMMIN</div>`;
+    document.body.appendChild(quote);
+    setTimeout(() => { quote.style.opacity = '1'; }, 900);
+
+    // 4. Wall of water crashes down from top
+    setTimeout(() => {
+      // Fade quote and sirens slightly
+      quote.style.opacity = '0';
+      sirenEls.forEach(s => { s.style.opacity = '0'; });
+      flashOverlay.style.animation = 'none';
+      flashOverlay.style.opacity = '0';
+
+      const waterContainer = document.createElement('div');
+      waterContainer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:503;overflow:hidden;';
+      document.body.appendChild(waterContainer);
+
+      // Spawn drip streams across the full width
+      const dripCount = 28;
+      const drips = [];
+
+      for (let i = 0; i < dripCount; i++) {
+        const x = (i / (dripCount - 1)) * 100; // evenly spread across vw
+        const xJitter = (Math.random() - 0.5) * 3;
+        const delay = Math.random() * 1200; // stagger start
+        const speed = 60 + Math.random() * 80; // px/s
+        const width = 3 + Math.random() * 10;
+        const wobble = (Math.random() - 0.5) * 20;
+
+        setTimeout(() => {
+          const drip = document.createElement('div');
+          drip.style.cssText = [
+            'position:absolute',
+            `left:calc(${x + xJitter}vw - ${width/2}px)`,
+            'top:0px',
+            `width:${width}px`,
+            'height:0px',
+            'border-radius:0 0 40% 40%',
+            `background:linear-gradient(180deg, #0055BB 0%, #0077DD 50%, rgba(0,80,180,0) 100%)`,
+            'opacity:0.88',
+          ].join(';');
+          waterContainer.appendChild(drip);
+
+          // Blob at the tip
+          const blob = document.createElement('div');
+          blob.style.cssText = [
+            'position:absolute',
+            `left:calc(${x + xJitter}vw - ${width}px)`,
+            'top:0px',
+            `width:${width * 2}px`,
+            `height:${width * 1.5}px`,
+            'border-radius:50%',
+            'background:#0066CC',
+            'opacity:0.9',
+          ].join(';');
+          waterContainer.appendChild(blob);
+
+          drips.push({ drip, blob, speed, wobble, y: 0, width });
+        }, delay);
+      }
+
+      // rAF loop to grow all drips downward
+      const dripStart = performance.now();
+      const MAX_DRIP_MS = 4000;
+      let dripRaf;
+
+      function animateDrips(now) {
+        const elapsed = now - dripStart;
+        const allDrips = waterContainer.querySelectorAll('div');
+
+        drips.forEach(d => {
+          if (!d.drip.parentNode) return;
+          d.y += d.speed / 60;
+          const h = Math.min(d.y, window.innerHeight + 60);
+          d.drip.style.height = h + 'px';
+          // blob tracks the tip
+          const blobTop = Math.min(d.y, window.innerHeight + 20);
+          d.blob.style.top = blobTop + 'px';
+        });
+
+        if (elapsed < MAX_DRIP_MS) {
+          dripRaf = requestAnimationFrame(animateDrips);
+        }
+      }
+      dripRaf = requestAnimationFrame(animateDrips);
+
+      // Fade everything out after drips finish
+      setTimeout(() => {
+        cancelAnimationFrame(dripRaf);
+        waterContainer.style.transition = 'opacity 1.2s ease';
+        waterContainer.style.opacity = '0';
+        setTimeout(() => {
+          waterContainer.remove(); quote.remove();
+          sirenEls.forEach(s => s.remove());
+          flashOverlay.remove();
+          dim.style.transition = 'background 1.4s ease';
+          dim.style.background = 'rgba(0,0,0,0)';
+          setTimeout(() => {
+            dim.remove();
+            showToast("Stay focused!");
+          }, 1500);
+        }, 1300);
+      }, 5500);
+    }, 4000);
+  }
+
+  // ── EYES — darkness, a pair of eyes emerge, stare, look away, fade ──
+  function triggerEyes() {
+    if (!document.getElementById('eyes-style')) {
+      const s = document.createElement('style');
+      s.id = 'eyes-style';
+      s.textContent = `
+        @keyframes eyeBlink {
+          0%,90%,100% { transform: scaleY(1); }
+          95%          { transform: scaleY(0.06); }
+        }
+        @keyframes eyesEmerge {
+          0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.7); }
+          100% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Blackout
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:600;transition:background 1.2s ease;';
+    document.body.appendChild(dim);
+    requestAnimationFrame(() => { dim.style.background = 'rgba(0,0,0,0.97)'; });
+
+    // 2. Eyes emerge from darkness
+    const eyeWrap = document.createElement('div');
+    eyeWrap.style.cssText = [
+      'position:fixed', 'top:50%', 'left:50%',
+      'transform:translate(-50%,-50%) scale(0.7)',
+      'pointer-events:none', 'z-index:601',
+      'opacity:0',
+      'animation:eyesEmerge 1.4s ease 1.2s forwards',
+    ].join(';');
+
+    // Pupil offset — starts centered, then looks away
+    // We'll animate via JS after emerge
+    eyeWrap.innerHTML = `<svg id="eyes-svg" width="260" height="100" viewBox="0 0 260 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="irisL" cx="42%" cy="38%" r="58%">
+          <stop offset="0%"   stop-color="#4A7A40"/>
+          <stop offset="55%"  stop-color="#2A5228"/>
+          <stop offset="100%" stop-color="#1A3A18"/>
+        </radialGradient>
+        <radialGradient id="irisR" cx="42%" cy="38%" r="58%">
+          <stop offset="0%"   stop-color="#4A7A40"/>
+          <stop offset="55%"  stop-color="#2A5228"/>
+          <stop offset="100%" stop-color="#1A3A18"/>
+        </radialGradient>
+        <radialGradient id="scleraGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%"   stop-color="#F5F0E8"/>
+          <stop offset="100%" stop-color="#D8D0C0"/>
+        </radialGradient>
+        <clipPath id="leftEyeClip">
+          <ellipse cx="65" cy="50" rx="52" ry="32"/>
+        </clipPath>
+        <clipPath id="rightEyeClip">
+          <ellipse cx="195" cy="50" rx="52" ry="32"/>
+        </clipPath>
+      </defs>
+
+      <!-- LEFT EYE -->
+      <g style="transform-origin:65px 50px; animation:eyeBlink 4s ease-in-out 2s infinite;">
+        <!-- sclera -->
+        <ellipse cx="65" cy="50" rx="52" ry="32" fill="url(#scleraGrad)"/>
+        <!-- iris + pupil group — moveable -->
+        <g id="left-iris" clip-path="url(#leftEyeClip)">
+          <circle cx="65" cy="50" r="19" fill="url(#irisL)"/>
+          <!-- iris texture -->
+          <circle cx="65" cy="50" r="19" fill="none" stroke="#1A3A18" stroke-width="0.8" opacity="0.4"/>
+          <line x1="65" y1="31" x2="65" y2="69" stroke="#1A3A18" stroke-width="0.6" opacity="0.2"/>
+          <line x1="46" y1="50" x2="84" y2="50" stroke="#1A3A18" stroke-width="0.6" opacity="0.2"/>
+          <!-- pupil -->
+          <circle cx="65" cy="50" r="9" fill="#0A0A08"/>
+          <!-- catchlight -->
+          <circle cx="60" cy="45" r="3" fill="rgba(255,255,255,0.75)"/>
+          <circle cx="69" cy="54" r="1.5" fill="rgba(255,255,255,0.35)"/>
+        </g>
+        <!-- lashes top -->
+        <path d="M13,50 Q65,10 117,50" fill="none" stroke="#0A0806" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+
+      <!-- RIGHT EYE -->
+      <g style="transform-origin:195px 50px; animation:eyeBlink 4s ease-in-out 2.3s infinite;">
+        <ellipse cx="195" cy="50" rx="52" ry="32" fill="url(#scleraGrad)"/>
+        <g id="right-iris" clip-path="url(#rightEyeClip)">
+          <circle cx="195" cy="50" r="19" fill="url(#irisR)"/>
+          <circle cx="195" cy="50" r="19" fill="none" stroke="#1A3A18" stroke-width="0.8" opacity="0.4"/>
+          <line x1="195" y1="31" x2="195" y2="69" stroke="#1A3A18" stroke-width="0.6" opacity="0.2"/>
+          <line x1="176" y1="50" x2="214" y2="50" stroke="#1A3A18" stroke-width="0.6" opacity="0.2"/>
+          <circle cx="195" cy="50" r="9" fill="#0A0A08"/>
+          <circle cx="190" cy="45" r="3" fill="rgba(255,255,255,0.75)"/>
+          <circle cx="199" cy="54" r="1.5" fill="rgba(255,255,255,0.35)"/>
+        </g>
+        <path d="M143,50 Q195,10 247,50" fill="none" stroke="#0A0806" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    </svg>`;
+
+    document.body.appendChild(eyeWrap);
+
+    // 3. After emerge — pupils drift slightly, stare awkwardly
+    // Then after a hold, look sharply to the side and fade
+    setTimeout(() => {
+      const leftIris  = document.getElementById('left-iris');
+      const rightIris = document.getElementById('right-iris');
+
+      // Subtle live tracking — pupils drift around center slightly
+      let driftTimer = null;
+      function driftPupils(ox, oy) {
+        if (!leftIris || !rightIris) return;
+        leftIris.style.transition  = 'transform 0.8s ease';
+        rightIris.style.transition = 'transform 0.8s ease';
+        leftIris.style.transform   = `translate(${ox}px, ${oy}px)`;
+        rightIris.style.transform  = `translate(${ox}px, ${oy}px)`;
+      }
+
+      // Slow awkward drifts
+      const drifts = [
+        [2, -1], [-1, 2], [3, 1], [-2, -2], [1, 3], [0, -1], [-3, 1],
+      ];
+      let di = 0;
+      driftTimer = setInterval(() => {
+        const [ox, oy] = drifts[di % drifts.length];
+        driftPupils(ox, oy);
+        di++;
+      }, 900);
+
+      // 4. After staring — look sharply away to the right, then fade
+      setTimeout(() => {
+        clearInterval(driftTimer);
+        // Snap look to the right
+        if (leftIris && rightIris) {
+          leftIris.style.transition  = 'transform 0.15s ease-in';
+          rightIris.style.transition = 'transform 0.15s ease-in';
+          leftIris.style.transform   = 'translate(18px, 4px)';
+          rightIris.style.transform  = 'translate(18px, 4px)';
+        }
+
+        // Fade eyes first, then lift darkness after
+        setTimeout(() => {
+          eyeWrap.style.transition = 'opacity 1.2s ease';
+          eyeWrap.style.opacity = '0';
+          setTimeout(() => {
+            eyeWrap.remove();
+            dim.style.transition = 'background 1.4s ease';
+            dim.style.background = 'rgba(0,0,0,0)';
+            setTimeout(() => dim.remove(), 1500);
+          }, 1300);
+        }, 400);
+      }, 5000);
+
+    }, 2700); // fires after emerge animation completes
+  }
+
+  // ── EOWYN — calming blue, evenstar, breathing exercise ──
+  function triggerEowyn() {
+    if (!document.getElementById('eowyn-style')) {
+      const s = document.createElement('style');
+      s.id = 'eowyn-style';
+      s.textContent = `
+        @keyframes evenstarGlow {
+          0%,100% { filter: drop-shadow(0 0 12px rgba(180,210,255,0.7)) drop-shadow(0 0 30px rgba(140,180,255,0.4)); }
+          50%      { filter: drop-shadow(0 0 24px rgba(200,225,255,0.95)) drop-shadow(0 0 60px rgba(160,200,255,0.6)); }
+        }
+        @keyframes breatheExpand {
+          0%   { transform: translate(-50%,-50%) scale(0.55); opacity: 0.5; }
+          100% { transform: translate(-50%,-50%) scale(1);    opacity: 0.95; }
+        }
+        @keyframes breatheContract {
+          0%   { transform: translate(-50%,-50%) scale(1);    opacity: 0.95; }
+          100% { transform: translate(-50%,-50%) scale(0.55); opacity: 0.5; }
+        }
+        @keyframes breatheHold {
+          0%,100% { opacity: 0.85; }
+          50%      { opacity: 0.95; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Calm blue overlay
+    const veil = document.createElement('div');
+    veil.style.cssText = [
+      'position:fixed', 'inset:0',
+      'background:rgba(8,20,50,0)',
+      'pointer-events:all', 'z-index:600',
+      'transition:background 1.8s ease',
+    ].join(';');
+    document.body.appendChild(veil);
+    requestAnimationFrame(() => { veil.style.background = 'rgba(8,20,50,0.94)'; });
+
+    // Blue radial glow at centre
+    const glow = document.createElement('div');
+    glow.style.cssText = [
+      'position:fixed', 'inset:0',
+      'background:radial-gradient(ellipse 70% 70% at 50% 50%, rgba(60,100,200,0.22) 0%, transparent 70%)',
+      'pointer-events:none', 'z-index:601',
+      'opacity:0', 'transition:opacity 2s ease',
+    ].join(';');
+    document.body.appendChild(glow);
+    setTimeout(() => { glow.style.opacity = '1'; }, 400);
+
+    // 2. Evenstar pendant SVG
+    const starWrap = document.createElement('div');
+    starWrap.style.cssText = [
+      'position:fixed', 'top:22%', 'left:50%',
+      'transform:translateX(-50%)',
+      'pointer-events:none', 'z-index:602',
+      'opacity:0', 'transition:opacity 1.5s ease',
+      'animation:evenstarGlow 3s ease-in-out infinite',
+    ].join(';');
+
+    starWrap.innerHTML = `<svg width="130" height="200" viewBox="0 0 130 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="gemGrad" cx="38%" cy="32%" r="65%">
+          <stop offset="0%"   stop-color="#E8F4FF"/>
+          <stop offset="40%"  stop-color="#A8C8F8"/>
+          <stop offset="100%" stop-color="#4878C8"/>
+        </radialGradient>
+        <radialGradient id="chainGrad" cx="50%" cy="0%" r="100%">
+          <stop offset="0%"   stop-color="#D0E4FF"/>
+          <stop offset="100%" stop-color="#8EB4E8"/>
+        </radialGradient>
+      </defs>
+
+      <!-- chain -->
+      <path d="M 20,0 Q 65,8 110,0" fill="none" stroke="url(#chainGrad)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M 65,8 L 65,30" stroke="#A0C0E8" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- pendant bail -->
+      <ellipse cx="65" cy="30" rx="5" ry="7" fill="none" stroke="#B8D4F8" stroke-width="1.8"/>
+
+      <!-- ── EVENSTAR — central gem with radiating points ── -->
+      <!-- outer star points — 8 pointed -->
+      <g transform="translate(65,110)">
+        <!-- long cardinal points -->
+        <polygon points="0,-52 3,-12 0,-8 -3,-12" fill="#C8E0FF" opacity="0.9"/>
+        <polygon points="0,52  3,12  0,8  -3,12"  fill="#C8E0FF" opacity="0.9"/>
+        <polygon points="-52,0 -12,3 -8,0 -12,-3" fill="#C8E0FF" opacity="0.9"/>
+        <polygon points="52,0  12,3  8,0  12,-3"  fill="#C8E0FF" opacity="0.9"/>
+        <!-- shorter diagonal points -->
+        <polygon points="-36,-36 -8,-6 -6,-8" fill="#A8C8F8" opacity="0.8" transform="rotate(45 0 0)"/>
+        <polygon points="-36,-36 -8,-6 -6,-8" fill="#A8C8F8" opacity="0.8" transform="rotate(135 0 0)"/>
+        <polygon points="-36,-36 -8,-6 -6,-8" fill="#A8C8F8" opacity="0.8" transform="rotate(225 0 0)"/>
+        <polygon points="-36,-36 -8,-6 -6,-8" fill="#A8C8F8" opacity="0.8" transform="rotate(315 0 0)"/>
+        <!-- inner ring -->
+        <circle cx="0" cy="0" r="10" fill="none" stroke="#B0D0F8" stroke-width="1" opacity="0.7"/>
+        <!-- centre gem -->
+        <circle cx="0" cy="0" r="9" fill="url(#gemGrad)"/>
+        <!-- gem highlight -->
+        <ellipse cx="-3" cy="-3" rx="3.5" ry="2.5" fill="rgba(255,255,255,0.55)" transform="rotate(-30 -3 -3)"/>
+        <!-- filigree ring around gem -->
+        <circle cx="0" cy="0" r="13" fill="none" stroke="#90B8E8" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.65"/>
+      </g>
+    </svg>`;
+
+    document.body.appendChild(starWrap);
+    setTimeout(() => { starWrap.style.opacity = '1'; }, 600);
+
+    // 3. Opening text
+    const openText = document.createElement('div');
+    openText.style.cssText = [
+      'position:fixed', 'top:58%', 'left:50%',
+      'transform:translateX(-50%)',
+      'text-align:center',
+      'pointer-events:none', 'z-index:602',
+      'opacity:0', 'transition:opacity 1.2s ease',
+      'max-width:500px', 'width:90vw',
+    ].join(';');
+    openText.innerHTML = `
+      <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:clamp(15px,2.2vw,22px);color:rgba(200,225,255,0.92);line-height:1.8;margin-bottom:0.6rem;">
+        You have the power of the evenstar.<br>You will survive this.
+      </div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:rgba(160,200,255,0.75);">
+        Now breathe.
+      </div>`;
+    document.body.appendChild(openText);
+    setTimeout(() => { openText.style.opacity = '1'; }, 1200);
+
+    // 4. Breathing exercise begins after opening text
+    // One full box breath cycle: inhale 4s → hold 4s → exhale 4s → hold 4s = 16s
+    setTimeout(() => {
+      openText.style.opacity = '0';
+      setTimeout(() => openText.remove(), 800);
+
+      // Breathing circle
+      const breathCircle = document.createElement('div');
+      breathCircle.style.cssText = [
+        'position:fixed', 'top:50%', 'left:50%',
+        'transform:translate(-50%,-50%) scale(0.55)',
+        'width:220px', 'height:220px',
+        'border-radius:50%',
+        'background:radial-gradient(circle, rgba(100,160,255,0.35) 0%, rgba(60,100,200,0.15) 60%, transparent 100%)',
+        'border:2px solid rgba(140,190,255,0.5)',
+        'pointer-events:none', 'z-index:602',
+        'opacity:0.5',
+      ].join(';');
+      document.body.appendChild(breathCircle);
+
+      // Instruction label
+      const breathLabel = document.createElement('div');
+      breathLabel.style.cssText = [
+        'position:fixed', 'top:50%', 'left:50%',
+        'transform:translate(-50%,-50%)',
+        'text-align:center',
+        'pointer-events:none', 'z-index:603',
+        'width:220px',
+      ].join(';');
+      breathLabel.innerHTML = `
+        <div id="breath-word" style="font-family:'Cinzel',serif;font-size:clamp(18px,3vw,28px);color:rgba(200,225,255,0.95);letter-spacing:0.12em;margin-bottom:8px;"></div>
+        <div id="breath-count" style="font-family:'Share Tech Mono',monospace;font-size:clamp(28px,5vw,48px);color:rgba(160,200,255,0.9);letter-spacing:0.05em;"></div>`;
+      document.body.appendChild(breathLabel);
+
+      const wordEl  = document.getElementById('breath-word');
+      const countEl = document.getElementById('breath-count');
+
+      // Box breath: each phase is 4 counts of 1s each
+      const phases = [
+        { word: 'BREATHE IN',  dir: 'expand',   duration: 4 },
+        { word: 'HOLD',        dir: 'hold-big',  duration: 4 },
+        { word: 'BREATHE OUT', dir: 'contract',  duration: 4 },
+        { word: 'HOLD',        dir: 'hold-small',duration: 4 },
+      ];
+
+      let phaseIdx = 0;
+      let countVal = 1;
+      let countTimer = null;
+      let phaseTimer = null;
+
+      function runPhase() {
+        if (phaseIdx >= phases.length) {
+          // Done — fade everything out
+          breathCircle.style.transition = 'opacity 1.5s ease';
+          breathCircle.style.opacity = '0';
+          breathLabel.style.transition = 'opacity 1.5s ease';
+          breathLabel.style.opacity = '0';
+          starWrap.style.transition = 'opacity 1.5s ease';
+          starWrap.style.opacity = '0';
+          veil.style.transition = 'background 2s ease';
+          veil.style.background = 'rgba(8,20,50,0)';
+          glow.style.transition = 'opacity 1.5s ease';
+          glow.style.opacity = '0';
+          setTimeout(() => {
+            breathCircle.remove(); breathLabel.remove();
+            starWrap.remove(); veil.remove(); glow.remove();
+            showToast("🌟 Better. Now file that bid.");
+          }, 2000);
+          return;
+        }
+
+        const phase = phases[phaseIdx];
+        wordEl.textContent = phase.word;
+        countVal = 1;
+        countEl.textContent = countVal;
+
+        // Animate the circle
+        breathCircle.style.transition = '';
+        breathCircle.style.animation = 'none';
+        void breathCircle.offsetWidth; // force reflow
+        if (phase.dir === 'expand') {
+          breathCircle.style.transition = `transform ${phase.duration}s linear, opacity ${phase.duration}s linear`;
+          breathCircle.style.transform = 'translate(-50%,-50%) scale(1)';
+          breathCircle.style.opacity = '0.95';
+        } else if (phase.dir === 'contract') {
+          breathCircle.style.transition = `transform ${phase.duration}s linear, opacity ${phase.duration}s linear`;
+          breathCircle.style.transform = 'translate(-50%,-50%) scale(0.55)';
+          breathCircle.style.opacity = '0.5';
+        } else if (phase.dir === 'hold-big') {
+          breathCircle.style.animation = `breatheHold ${phase.duration / 2}s ease-in-out infinite`;
+        } else {
+          breathCircle.style.opacity = '0.5';
+        }
+
+        // Count 1→4, each digit shown for exactly 1 full second
+        countVal = 1;
+        countEl.textContent = countVal;
+        countTimer = setInterval(() => {
+          countVal++;
+          if (countVal <= phase.duration) countEl.textContent = countVal;
+          else clearInterval(countTimer);
+        }, 1000);
+
+        phaseTimer = setTimeout(() => {
+          clearInterval(countTimer);
+          phaseIdx++;
+          runPhase();
+        }, phase.duration * 1000);
+      }
+
+      // Small delay before breathing starts
+      setTimeout(runPhase, 600);
+
+    }, 4500);
+  }
+
+  // ── BYRON — Gandalf erupts, staff slams, "Fool of a Took!" ──
+  function triggerByron() {
+    if (!document.getElementById('byron-style')) {
+      const s = document.createElement('style');
+      s.id = 'byron-style';
+      s.textContent = `
+        @keyframes byronShake {
+          0%,100% { transform: translate(0,0) rotate(0deg); }
+          10%  { transform: translate(-8px, 4px) rotate(-1.5deg); }
+          20%  { transform: translate(8px, -4px) rotate(1.5deg); }
+          30%  { transform: translate(-6px, 6px) rotate(-1deg); }
+          40%  { transform: translate(6px, -6px) rotate(1deg); }
+          50%  { transform: translate(-4px, 4px) rotate(-0.5deg); }
+          60%  { transform: translate(4px, -3px) rotate(0.5deg); }
+          70%  { transform: translate(-3px, 3px) rotate(-0.3deg); }
+          80%  { transform: translate(3px, -2px) rotate(0.3deg); }
+          90%  { transform: translate(-2px, 1px) rotate(0deg); }
+        }
+        @keyframes staffSlam {
+          0%   { transform: translate(-50%, -200%) rotate(-35deg); opacity: 0; }
+          40%  { transform: translate(-50%, 0%)    rotate(-35deg); opacity: 1; }
+          55%  { transform: translate(-50%, -8%)   rotate(-35deg); }
+          70%  { transform: translate(-50%, 0%)    rotate(-35deg); }
+          100% { transform: translate(-50%, 0%)    rotate(-35deg); opacity: 1; }
+        }
+        @keyframes shockwave {
+          0%   { transform: translate(-50%,-50%) scale(0);   opacity: 0.8; }
+          100% { transform: translate(-50%,-50%) scale(4);   opacity: 0; }
+        }
+        @keyframes byronWordIn {
+          0%   { transform: translate(-50%,-50%) scale(1.8); opacity: 0; filter: blur(4px); }
+          100% { transform: translate(-50%,-50%) scale(1);   opacity: 1; filter: blur(0); }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    // 1. Flash white — like a lightning strike
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,0);pointer-events:none;z-index:600;transition:background 0.08s ease;';
+    document.body.appendChild(flash);
+    requestAnimationFrame(() => {
+      flash.style.background = 'rgba(255,255,255,0.95)';
+      setTimeout(() => {
+        flash.style.transition = 'background 0.4s ease';
+        flash.style.background = 'rgba(0,0,0,0)';
+        setTimeout(() => flash.remove(), 500);
+      }, 80);
+    });
+
+    // 2. Dark overlay rolls in
+    const dim = document.createElement('div');
+    dim.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:all;z-index:601;transition:background 0.4s ease;';
+    document.body.appendChild(dim);
+    setTimeout(() => { dim.style.background = 'rgba(10,5,0,0.88)'; }, 100);
+
+    // 3. Page shakes violently
+    setTimeout(() => {
+      document.body.style.animation = 'byronShake 0.6s ease-out forwards';
+      setTimeout(() => { document.body.style.animation = ''; }, 650);
+    }, 80);
+
+    // 4. Gandalf's staff slams down from the top
+    const staff = document.createElement('div');
+    staff.style.cssText = [
+      'position:fixed', 'top:35%', 'left:50%',
+      'transform:translate(-50%,-200%) rotate(-35deg)',
+      'pointer-events:none', 'z-index:603',
+      'animation:staffSlam 0.5s cubic-bezier(0.2,0,0.4,1) 0.3s forwards',
+      'opacity:0',
+    ].join(';');
+    staff.innerHTML = `<svg width="30" height="320" viewBox="0 0 30 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- staff shaft -->
+      <rect x="12" y="40" width="7" height="270" rx="3" fill="#5A3A10"/>
+      <rect x="13" y="40" width="3" height="270" rx="2" fill="#7A5A28" opacity="0.6"/>
+      <!-- crystal top -->
+      <ellipse cx="15" cy="36" rx="10" ry="14" fill="#C8D8F0"/>
+      <ellipse cx="15" cy="30" rx="7"  ry="10" fill="#E0ECFF"/>
+      <ellipse cx="12" cy="26" rx="3"  ry="4"  fill="rgba(255,255,255,0.7)"/>
+      <!-- glow -->
+      <ellipse cx="15" cy="34" rx="18" ry="22" fill="rgba(180,210,255,0.2)"/>
+      <!-- tip -->
+      <ellipse cx="15" cy="308" rx="4" ry="4" fill="#3A2008"/>
+    </svg>`;
+    document.body.appendChild(staff);
+
+    // 5. Shockwave ring on impact
+    setTimeout(() => {
+      const shock = document.createElement('div');
+      shock.style.cssText = [
+        'position:fixed', 'top:72%', 'left:50%',
+        'transform:translate(-50%,-50%) scale(0)',
+        'width:80px', 'height:80px',
+        'border-radius:50%',
+        'border:4px solid rgba(220,190,100,0.8)',
+        'pointer-events:none', 'z-index:604',
+        'animation:shockwave 0.6s ease-out forwards',
+      ].join(';');
+      document.body.appendChild(shock);
+      setTimeout(() => shock.remove(), 700);
+
+      // Second larger ring
+      setTimeout(() => {
+        const shock2 = document.createElement('div');
+        shock2.style.cssText = shock.style.cssText;
+        shock2.style.borderColor = 'rgba(200,160,60,0.5)';
+        shock2.style.animationDuration = '0.8s';
+        document.body.appendChild(shock2);
+        setTimeout(() => shock2.remove(), 900);
+      }, 100);
+
+      // Ground flash
+      const groundFlash = document.createElement('div');
+      groundFlash.style.cssText = 'position:fixed;bottom:0;left:0;right:0;height:40vh;background:radial-gradient(ellipse 60% 100% at 50% 100%, rgba(220,180,60,0.35) 0%, transparent 70%);pointer-events:none;z-index:602;opacity:0;transition:opacity 0.1s ease;';
+      document.body.appendChild(groundFlash);
+      requestAnimationFrame(() => { groundFlash.style.opacity = '1'; });
+      setTimeout(() => { groundFlash.style.transition = 'opacity 0.5s ease'; groundFlash.style.opacity = '0'; setTimeout(() => groundFlash.remove(), 600); }, 120);
+
+    }, 780); // fires when staff hits bottom
+
+    // 6. The quote erupts — centered, massive, furious
+    setTimeout(() => {
+      const quote = document.createElement('div');
+      quote.style.cssText = [
+        'position:fixed', 'top:42%', 'left:50%',
+        'transform:translate(-50%,-50%) scale(1.8)',
+        'text-align:center',
+        'pointer-events:none', 'z-index:605',
+        'opacity:0', 'filter:blur(4px)',
+        'animation:byronWordIn 0.35s cubic-bezier(0.2,0,0.4,1) forwards',
+        'max-width:680px', 'width:92vw',
+        'padding:1.4rem 2.2rem',
+        'background:rgba(0,0,0,0.78)',
+        'border:1px solid rgba(220,170,40,0.2)',
+      ].join(';');
+      quote.innerHTML = `
+        <div style="
+          font-family:'IM Fell English',serif;
+          font-style:italic;
+          font-size:clamp(16px,2.6vw,28px);
+          color:rgba(240,215,150,0.97);
+          line-height:1.7;
+          text-shadow:0 0 20px rgba(220,160,0,0.4);
+          margin-bottom:0.8rem;
+        ">"Fool of a Took! Throw yourself in next time<br>and rid us of your stupidity!"</div>
+        <div style="
+          font-family:'Share Tech Mono',monospace;
+          font-size:clamp(10px,1.3vw,14px);
+          letter-spacing:0.16em;
+          color:rgba(200,160,60,0.6);
+        ">— Gandalf the Grey, Mines of Moria —</div>`;
+      document.body.appendChild(quote);
+
+      // Hold, then fade everything out
+      setTimeout(() => {
+        quote.style.transition = 'opacity 1s ease';
+        quote.style.opacity = '0';
+        staff.style.transition = 'opacity 0.8s ease';
+        staff.style.opacity = '0';
+        setTimeout(() => {
+          quote.remove(); staff.remove();
+          dim.style.transition = 'background 1.2s ease';
+          dim.style.background = 'rgba(0,0,0,0)';
+          setTimeout(() => {
+            dim.remove();
+            showToast("🧙 Gandalf is not impressed with your incompetence.");
+          }, 1300);
+        }, 1100);
+      }, 3500);
+    }, 1000);
   }
 
   function triggerMordorMode() {
@@ -1791,15 +3467,14 @@
       // clean up inline styles so it's ready for next trigger
       eyeSvg.style.cssText = '';
       caption.style.cssText = '';
+      showToast("👁 One does not simply type MORDOR.");
     }, 8500);
-
-    showToast("👁 One does not simply type MORDOR.");
   }
 
   function triggerEmberShowerFull() {
     triggerEmberShower(60);
     triggerLavaOverflow();
-    showToast("🔥 The fires of Mount Doom intensify!");
+    setTimeout(() => showToast("🔥 The fires of Mount Doom intensify!"), 8200);
   }
 
   function triggerLavaOverflow() {
@@ -2156,6 +3831,97 @@
         }, 1200);
       }, 1100);
     }, 1800);
+  });
+
+  // ── Sam click — Sam's speech and carries Frodo back to the Shire ──
+  let samCarrying = false;
+  document.getElementById('pin-sam').style.cursor = 'pointer';
+  document.getElementById('pin-sam').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (samCarrying) return;
+    samCarrying = true;
+
+    const pinSam   = document.getElementById('pin-sam');
+    const pinFrodo = document.getElementById('pin-frodo');
+
+    // 1. Centered quote overlay
+    const quoteWrap = document.createElement('div');
+    quoteWrap.style.cssText = [
+      'position:fixed', 'top:50%', 'left:50%',
+      'transform:translate(-50%,-50%)',
+      'background:rgba(0,0,0,0.85)',
+      'border:1px solid rgba(200,160,60,0.3)',
+      'padding:2rem 2.8rem',
+      'max-width:580px', 'width:90vw',
+      'text-align:center',
+      'pointer-events:none', 'z-index:600',
+      'opacity:0', 'transition:opacity 0.6s ease',
+    ].join(';');
+    quoteWrap.innerHTML = `
+      <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:clamp(14px,2vw,20px);color:rgba(230,210,170,0.95);line-height:1.85;margin-bottom:1rem;">
+        "It's like in the great stories. The ones that really mattered. Full of darkness and danger they were...
+        But in the end, it's only a passing thing, this bid season. Even darkness must pass.
+        June 1st will come. And when the sun shines, it will shine out the clearer."
+      </div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.15em;color:rgba(180,150,90,0.6);">
+        — Samwise Gamgee
+      </div>`;
+    document.body.appendChild(quoteWrap);
+    requestAnimationFrame(() => { quoteWrap.style.opacity = '1'; });
+
+    // 2. After quote holds — Sam walks to Frodo
+    setTimeout(() => {
+      quoteWrap.style.opacity = '0';
+      setTimeout(() => quoteWrap.remove(), 600);
+
+      // Lock tick from overriding character positions during animation
+      lockCharacterPositions = true;
+
+      // Sam slides to Frodo's position
+      pinSam.style.transition = 'left 1.2s ease';
+      pinSam.style.left = pinFrodo.style.left;
+
+      // 3. At arrival — Frodo fades, Sam gets a carrying indicator
+      setTimeout(() => {
+        pinFrodo.style.transition = 'opacity 0.4s ease';
+        pinFrodo.style.opacity = '0';
+
+        // Add a little Frodo shape on Sam's back
+        const samSvg = pinSam.querySelector('svg');
+        const carried = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        carried.innerHTML = `
+          <circle cx="14" cy="-18" r="4.5" fill="#D4A574"/>
+          <ellipse cx="14" cy="-10" rx="4" ry="5" fill="#3B5A8A"/>
+          <line x1="10" y1="-12" x2="6" y2="-6" stroke="#3B5A8A" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="18" y1="-12" x2="20" y2="-6" stroke="#3B5A8A" stroke-width="1.5" stroke-linecap="round"/>
+          <ellipse cx="9" cy="-4" rx="3" ry="1.5" fill="#6B4A2A"/>
+          <ellipse cx="19" cy="-4" rx="3" ry="1.5" fill="#6B4A2A"/>
+        `;
+        carried.style.opacity = '0';
+        carried.style.transition = 'opacity 0.4s ease';
+        samSvg.appendChild(carried);
+        requestAnimationFrame(() => { carried.style.opacity = '1'; });
+
+        showToast("🌄 Mr. Frodo, I can't carry the bid for you... but I can carry you!");
+
+        // 4. Sam walks back toward The Shire (0%)
+        setTimeout(() => {
+          pinSam.style.transition = 'left 3.5s cubic-bezier(0.3,0,0.6,1)';
+          pinSam.style.left = '0%';
+
+          // 5. Arrive back — reset everything
+          setTimeout(() => {
+            carried.remove();
+            pinFrodo.style.opacity = '1';
+            pinSam.style.transition = 'left 1s linear';
+            pinFrodo.style.transition = 'left 1s linear';
+            lockCharacterPositions = false;
+            samCarrying = false;
+          }, 3700);
+        }, 800);
+
+      }, 1300);
+    }, 8000);
   });
 
   // ── Shire click — potato rain ──
