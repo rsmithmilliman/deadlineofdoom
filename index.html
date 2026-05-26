@@ -68,9 +68,13 @@
       text-align: center;
       opacity: 0.8;
       animation: fadeDown 1.2s ease both;
+      margin-bottom: 0.8rem;
     }
 
-    .ring-wrap { animation: fadeDown 1s 0.1s ease both; }
+    .ring-wrap {
+      animation: fadeDown 1s 0.1s ease both;
+      margin-bottom: 0.8rem;
+    }
 
     @keyframes ringGlow {
       0%, 100% { filter: drop-shadow(0 0 14px rgba(200,134,10,0.5)) drop-shadow(0 0 36px rgba(200,134,10,0.2)); }
@@ -120,6 +124,8 @@
       font-size: 16px;
       color: var(--gold-ring);
       letter-spacing: 0.1em;
+      margin-top: 0.6rem;
+      margin-bottom: 0.4rem;
     }
 
     .rule {
@@ -128,6 +134,8 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      margin-top: 0.4rem;
+      margin-bottom: 0.4rem;
     }
     .rule-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(200,134,10,0.5), transparent); }
     .rule-diamond { width: 6px; height: 6px; background: var(--gold-ring); transform: rotate(45deg); flex-shrink: 0; }
@@ -137,6 +145,8 @@
       align-items: flex-start;
       gap: 0;
       animation: fadeUp 1s 0.3s ease both;
+      margin-top: 0.4rem;
+      margin-bottom: 0.4rem;
     }
 
     .unit {
@@ -187,6 +197,7 @@
       animation: fadeUp 1s 0.4s ease both;
       transition: opacity 0.4s ease;
       min-height: 2em;
+      margin-top: 0.4rem;
     }
 
     /* ── Journey tracker ── */
