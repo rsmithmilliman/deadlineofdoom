@@ -1210,6 +1210,156 @@
     }, 5500);
   }
 
+  // ── SAM — popcorn rains from the top and piles at the bottom ──
+  function triggerSam() {
+    if (!document.getElementById('sam-style')) {
+      const s = document.createElement('style');
+      s.id = 'sam-style';
+      s.textContent = ``;
+      document.head.appendChild(s);
+    }
+
+    function makePopcornSVG() {
+      const variants = [
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" width="28" height="26">
+          <ellipse cx="14" cy="20" rx="11" ry="5" fill="#e8c840" opacity="0.9"/>
+          <circle cx="8"  cy="15" r="6"  fill="#f5e070"/>
+          <circle cx="16" cy="13" r="7"  fill="#f7e878"/>
+          <circle cx="22" cy="16" r="5"  fill="#f0d855"/>
+          <circle cx="12" cy="11" r="5"  fill="#fff8c0"/>
+          <circle cx="19" cy="11" r="4"  fill="#fdf5b0"/>
+        </svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <ellipse cx="12" cy="19" rx="9" ry="4" fill="#d4a820" opacity="0.85"/>
+          <circle cx="9"  cy="14" r="6"  fill="#f5e070"/>
+          <circle cx="16" cy="13" r="6"  fill="#f7ea80"/>
+          <circle cx="12" cy="10" r="5"  fill="#fffbd0"/>
+          <circle cx="17" cy="10" r="3.5" fill="#f0dc60"/>
+        </svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 28" width="22" height="28">
+          <ellipse cx="11" cy="23" rx="8" ry="4" fill="#c8981c" opacity="0.8"/>
+          <circle cx="7"  cy="19" r="5"  fill="#f0d040"/>
+          <circle cx="14" cy="17" r="6"  fill="#f5e060"/>
+          <circle cx="10" cy="13" r="5"  fill="#fdf5b0"/>
+          <circle cx="15" cy="12" r="4"  fill="#f7ea70"/>
+          <circle cx="9"  cy="9"  r="4"  fill="#fffde0"/>
+        </svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 20" width="32" height="20">
+          <ellipse cx="16" cy="17" rx="13" ry="4" fill="#d4a820" opacity="0.85"/>
+          <circle cx="7"  cy="12" r="6"  fill="#f5e068"/>
+          <circle cx="15" cy="10" r="6"  fill="#f8ec80"/>
+          <circle cx="23" cy="12" r="6"  fill="#f0d850"/>
+          <circle cx="11" cy="8"  r="4"  fill="#fffad0"/>
+          <circle cx="20" cy="8"  r="4"  fill="#fdf8c0"/>
+        </svg>`,
+      ];
+      return variants[Math.floor(Math.random() * variants.length)];
+    }
+
+    // pileTops[bucket] = current top-of-pile Y in pixels (screen coords, smaller = higher)
+    // Start at the bottom of the screen
+    const BUCKET_COUNT = 30;
+    const pileTops = new Array(BUCKET_COUNT).fill(window.innerHeight);
+    const allKernels = [];
+
+    const KERNEL_COUNT = 80;
+    const GRAVITY = 0.55;       // px/frame² acceleration
+    const BOUNCE_DAMPEN = 0.42; // fraction of velocity kept on each bounce
+    const MIN_BOUNCE_VY = 1.2;  // below this speed, stop bouncing
+
+    function launchKernel() {
+      const el = document.createElement('div');
+      const leftPx = (0.02 + Math.random() * 0.96) * window.innerWidth;
+      const size   = 0.75 + Math.random() * 0.65;
+      // Width of kernel approx 28px * size — used for bucket
+      const kernelW = 28 * size;
+
+      el.style.cssText = [
+        'position:fixed',
+        'top:0',
+        'left:0',
+        'pointer-events:none',
+        'z-index:502',
+        'transform-origin:center center',
+        'will-change:transform',
+      ].join(';');
+      el.innerHTML = makePopcornSVG();
+      document.body.appendChild(el);
+
+      // Physics state
+      let x      = leftPx;
+      let y      = -40;
+      let vy     = 1 + Math.random() * 2;   // initial downward velocity
+      let angle  = Math.random() * 360;
+      let spin   = (Math.random() * 6 - 3); // degrees per frame
+      let landed = false;
+      let bounceCount = 0;
+
+      // Which pile bucket does this kernel belong to?
+      const bucket = Math.min(BUCKET_COUNT - 1, Math.floor((x / window.innerWidth) * BUCKET_COUNT));
+
+      function frame() {
+        if (landed) return;
+
+        vy += GRAVITY;
+        y  += vy;
+        angle += spin;
+
+        // Floor for this kernel = current top of its pile column
+        const floor = pileTops[bucket] - kernelW * 0.3;
+
+        if (y >= floor) {
+          y = floor;
+          vy = -(vy * BOUNCE_DAMPEN);
+          bounceCount++;
+          spin *= 0.6;
+
+          if (Math.abs(vy) < MIN_BOUNCE_VY) {
+            // Settle: update pile height for this bucket
+            landed = true;
+            pileTops[bucket] = floor - kernelW * 0.55;
+            el.style.transform = `translate(${x}px, ${y}px) rotate(${angle.toFixed(1)}deg) scale(${size.toFixed(2)})`;
+            return;
+          }
+        }
+
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${angle.toFixed(1)}deg) scale(${size.toFixed(2)})`;
+        requestAnimationFrame(frame);
+      }
+
+      allKernels.push(el);
+      requestAnimationFrame(frame);
+    }
+
+    // Stagger kernel launches over ~4 seconds
+    for (let i = 0; i < KERNEL_COUNT; i++) {
+      setTimeout(launchKernel, Math.random() * 4000);
+    }
+
+    // Warm buttery overlay tint
+    const tint = document.createElement('div');
+    tint.style.cssText = 'position:fixed;inset:0;background:rgba(60,40,0,0);pointer-events:none;z-index:500;transition:background 1.2s ease;';
+    document.body.appendChild(tint);
+    setTimeout(() => { tint.style.background = 'rgba(60,40,0,0.18)'; }, 100);
+
+
+
+    // Clean up after ~9.5s
+    setTimeout(() => {
+      tint.style.transition = 'background 1.5s ease';
+      tint.style.background = 'rgba(60,40,0,0)';
+      allKernels.forEach(k => {
+        k.style.transition = 'opacity 1s ease';
+        k.style.opacity = '0';
+        setTimeout(() => k.remove(), 1100);
+      });
+      setTimeout(() => {
+        tint.remove();
+        showToast("🍿 Once you pop, you can't stop.");
+      }, 1600);
+    }, 9500);
+  }
+
   // ── 5. KEYBOARD CODES ──
   let keyBuffer = '';
   const KEY_CODES = {
@@ -1227,6 +1377,7 @@
     'ARWEN':     triggerEowyn,
     'BYRON':     triggerByron,
     'EYES':      triggerEyes,
+    'SAM':       triggerSam,
   };
 
   document.addEventListener('keydown', (e) => {
